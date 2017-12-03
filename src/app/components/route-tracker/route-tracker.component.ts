@@ -4,13 +4,13 @@ import { DataService } from '../../data.service';
 @Component({
   selector: 'app-route-tracker',
   templateUrl: './route-tracker.component.html',
-  styleUrls: ['./route-tracker.component.css']
+  styleUrls: ['./route-tracker.component.scss']
 })
 export class RouteTrackerComponent implements OnInit {
   routes = null;
 
   ngOnInit() {
-    this.getRoutes();
+    //this.getRoutes();
   }
   
   getRoutes(){

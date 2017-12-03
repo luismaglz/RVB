@@ -1,0 +1,10 @@
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<button (click)="signOut()">SignOut</button>
+<div *ngIf="profile">
+    <div>{{profile.getId()}}</div>
+    <div>{{profile.getName()}}</div>
+    <div>{{profile.getGivenName()}}</div>
+    <div>{{profile.getFamilyName()}}</div>
+    <div>{{profile.getImageUrl()}}</div>
+    <div>{{profile.getEmail()}}</div>
+</div>

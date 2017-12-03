@@ -1,0 +1,22 @@
+:host(){
+    display: flex;
+    flex-direction:row;
+}
+
+.route-info {
+    flex-direction:row;
+    flex:1 1 100%;
+}
+.route-info > div {
+    display:inline-flex;
+    flex:1 1 100%;
+}
+
+.route-color{
+    background-color:#E8840C;
+    width:20px;
+}
+    
+.route-info .grade{
+    background-color:#red;
+}
