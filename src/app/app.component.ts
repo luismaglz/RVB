@@ -7,5 +7,21 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor() {}
+  isLoggedIn = false;
+  token = null;
+  profile = null;
+
+  constructor() { }
+
+  logInSuccess(isLoggedIn: boolean) {
+    this.isLoggedIn = isLoggedIn;
+  }
+
+  onToken(token: string) {
+    this.token = token;
+  }
+
+  onProfile(profile: any) {
+    this.profile = profile;
+  }
 }

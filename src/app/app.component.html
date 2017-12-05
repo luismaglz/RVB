@@ -1,2 +1,4 @@
-<app-route-tracker></app-route-tracker>
-<app-google-login></app-google-login>
+<app-google-login *ngIf="!isLoggedIn" (logInSuccess)="logInSuccess($event)" (profile)="onProfile($event)" (token)="onToken($event)"></app-google-login>
+<app-current-user *ngIf="isLoggedIn && profile" [profile]="profile"></app-current-user>
+<app-route-tracker *ngIf="isLoggedIn" [token]="token"></app-route-tracker>
+
