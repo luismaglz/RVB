@@ -11,7 +11,7 @@ export class RouteTrackerComponent implements OnInit {
   @Input() token: string;
 
   dataSource = null;
-  displayedColumns = ['zone', 'color', 'grade', 'setter', 'attempts', 'sends', 'addAttempt'];
+  displayedColumns = ['grade', 'setter', 'likes', 'dislikes',];
 
   ngOnInit() {
     this.getRoutes();

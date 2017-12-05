@@ -1,19 +1,8 @@
 <div *ngIf="dataSource" class="example-container mat-elevation-z8">
     <mat-table #table [dataSource]="dataSource">
-
-      <ng-container matColumnDef="zone">
-        <mat-header-cell *matHeaderCellDef> zone </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.zone}} </mat-cell>
-      </ng-container>
-      
-      <ng-container matColumnDef="color">
-        <mat-header-cell *matHeaderCellDef> color </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.color}} </mat-cell>
-      </ng-container>
-  
       <ng-container matColumnDef="grade">
         <mat-header-cell *matHeaderCellDef> grade </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.grade}} </mat-cell>
+        <mat-cell *matCellDef="let element" [style.color]="'#' + element.color"> {{element.grade}} </mat-cell>
       </ng-container>
   
       <ng-container matColumnDef="setter">
@@ -21,21 +10,14 @@
         <mat-cell *matCellDef="let element"> {{element.setter}} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="attempts">
-        <mat-header-cell *matHeaderCellDef> attempts </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.attempts}} </mat-cell>
+      <ng-container matColumnDef="likes">
+        <mat-header-cell *matHeaderCellDef> likes </mat-header-cell>
+        <mat-cell *matCellDef="let likes"> <i class="fa fa-thumbs-up" aria-hidden="true"></i> 2 </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="sends">
-        <mat-header-cell *matHeaderCellDef> sends </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.sends}} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="addAttempt">
-        <mat-header-cell *matHeaderCellDef> Add Attempt </mat-header-cell>
-        <mat-cell *matCellDef="let element"> 
-          <button mat-mini-fab color="primary">+</button>
-        </mat-cell>
+      <ng-container matColumnDef="dislikes">
+        <mat-header-cell *matHeaderCellDef> dislikes </mat-header-cell>
+        <mat-cell *matCellDef="let element"> <i class="fa fa-thumbs-down" aria-hidden="true"></i> 3 </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

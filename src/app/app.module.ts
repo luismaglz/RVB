@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule, MatChipsModule, MatTabsModule } from '@angular/material';
 
 // Import the Http Module and our Data Service
 import { HttpModule } from '@angular/http';
@@ -27,6 +27,8 @@ import { CurrentUserComponent } from './components/current-user/current-user.com
     MatButtonModule,
     MatTableModule,
     MatToolbarModule,
+    MatChipsModule,
+    MatTabsModule,
     MatCheckboxModule
   ],
   providers: [DataService],
