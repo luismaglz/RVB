@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { RouteTrackerComponent } from './components/route-tracker/route-tracker.component';
 import { GoogleLoginComponent } from './components/login/google-login/google-login.component';
 import { CurrentUserComponent } from './components/current-user/current-user.component';
+import { SessionComponent } from './components/session/session.component';
+import { RateComponent } from './components/rate/rate.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { CurrentUserComponent } from './components/current-user/current-user.com
     AppComponent,
     RouteTrackerComponent,
     GoogleLoginComponent,
-    CurrentUserComponent
+    CurrentUserComponent,
+    SessionComponent,
+    RateComponent
   ],
   imports: [
     BrowserModule,

@@ -2,18 +2,7 @@
 <app-current-user *ngIf="isLoggedIn && profile" [profile]="profile"></app-current-user>
 <mat-tab-group *ngIf="isLoggedIn">
     <mat-tab label="NewsFeed"></mat-tab>
-    <mat-tab label="Routes">
-        <mat-chip-list>
-            <mat-chip color="primary" selected="true">Boulder</mat-chip>
-            <mat-chip color="primary" selected="true">Lead</mat-chip>
-            <mat-chip color="primary" selected="true">Top-Rope</mat-chip>
-        </mat-chip-list>
-        <mat-chip-list>
-            <mat-chip color="accent" selected="true">Old Gym</mat-chip>
-            <mat-chip color="accent" selected="true">Wable Wall</mat-chip>
-            <mat-chip color="accent" selected="true">Slab</mat-chip>
-            <mat-chip color="accent" selected="true">Overhang</mat-chip>
-        </mat-chip-list>
+    <mat-tab label="Explore">
         <app-route-tracker *ngIf="isLoggedIn" [token]="token"></app-route-tracker>
     </mat-tab>
 </mat-tab-group>
