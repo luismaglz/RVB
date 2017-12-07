@@ -7,29 +7,39 @@ import { MatTableDataSource } from '@angular/material';
   styleUrls: ['./session.component.scss']
 })
 export class SessionComponent implements OnInit {
-  @Input() routeData: any;
+  @Input() routeData: Array<RouteData>;
 
-  routeDataSource: MatTableDataSource<Element>;
-  displayedColumns = ['grade', 'setter', 'rate', 'attempt', 'complete'];
-  currentSessionData: SessionData = new SessionData();
-
-  constructor() { }
+  dataSource = null;
+  displayedColumns = ['grade', 'setter', 'attempt', 'complete', 'rate'];
+  currentSessionData: Array<SessionRouteData> = new Array<SessionRouteData>();
 
   ngOnInit() {
-    this.routeDataSource = new MatTableDataSource<Element>(this.routeData);
+    this.dataSource = new MatTableDataSource<RouteData>(this.routeData);
   }
 
   completeSession() {
 
   }
+
+  addAttempt(routeId: string) {
+
+  }
+
+  addComplete(routeId: string) {
+
+  }
+
+  constructor() { }
 }
 
-class SessionData {
-  routes: Array<SessionRouteData>;
-
-  constructor() {
-    this.routes = new Array<SessionRouteData>();
-  }
+interface RouteData {
+  id: string;
+  zone: string;
+  type: string;
+  grade: string;
+  color: String;
+  likes: string;
+  dislikes: string;
 }
 
 class SessionRouteData {
@@ -38,8 +48,8 @@ class SessionRouteData {
   completed: number;
   comments: string;
 
-  constructor(routeId: string) {
-    this.routeId = routeId;
+  constructor(routeData: RouteData) {
+    this.routeId = routeData.id;
     this.attempts = 0;
     this.completed = 0;
     this.comments = null;

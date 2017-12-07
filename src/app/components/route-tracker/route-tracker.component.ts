@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DataService } from '../../data.service';
 import { MatTableDataSource } from '@angular/material';
 
 @Component({
@@ -9,26 +8,13 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class RouteTrackerComponent implements OnInit {
   @Input() token: string;
+  @Input() routeData: any;
 
   dataSource = null;
   displayedColumns = ['grade', 'setter', 'likes', 'dislikes'];
 
   ngOnInit() {
-    this.getRoutes();
+    this.dataSource = new MatTableDataSource<Element>(this.routeData);
   }
-
-  getRoutes() {
-    this._dataService.getRoutes().subscribe(data => {
-      if (!data) { return null; }
-      this.dataSource = new MatTableDataSource<Element>(data);
-    });
-  }
-
-  createRoutes() {
-    this._dataService.createRoutes().subscribe(data => {
-      debugger;
-    });
-  }
-
-  constructor(private _dataService: DataService) { }
+  constructor() { }
 }

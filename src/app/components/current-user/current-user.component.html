@@ -1,3 +1,4 @@
 <mat-toolbar color="primary">
   <img class="user-image" [src]="profile.getImageUrl()"/><span class="user-name">{{profile.getName()}}</span>
+  <button mat-fab color="primary" (click)="createRoutes()">+</button>
 </mat-toolbar>

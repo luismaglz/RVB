@@ -1,0 +1,13 @@
+.rate-container {
+    display:flex;
+    flex-grow: 1 1 100%;
+    flex-direction:row;
+    .like,.dislike{
+        font-size:20px;
+        color:#f1f1f1;
+        padding:10px;
+        &.selected{
+            color:#0A438C;
+        }
+    }
+}

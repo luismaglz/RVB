@@ -1,8 +1,8 @@
 <div class="rate-container">
-  <div class="like" (click)="likeRoute()">
+  <div class="like" [ngClass]="{'selected': selectedRating === 1}" (click)="likeRoute()">
     <i class="fa fa-thumbs-up" aria-hidden="true"></i>
   </div>
-  <div class="dislike" (click)="dislikeRoute()">
+  <div class="dislike" [ngClass]="{'selected': selectedRating === 2}" (click)="dislikeRoute()">
     <i class="fa fa-thumbs-down" aria-hidden="true"></i>
   </div>
 </div>

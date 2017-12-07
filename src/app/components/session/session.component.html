@@ -1,19 +1,27 @@
 <div *ngIf="dataSource" class="example-container mat-elevation-z8">
-  <mat-chip-list>
-    <mat-chip color="primary" selected="true">Boulder</mat-chip>
-    <mat-chip color="primary" selected="true">Lead</mat-chip>
-    <mat-chip color="primary" selected="true">Top-Rope</mat-chip>
-  </mat-chip-list>
-  <mat-chip-list>
-    <mat-chip color="accent" selected="true">Old Gym</mat-chip>
-    <mat-chip color="accent" selected="true">Wable Wall</mat-chip>
-    <mat-chip color="accent" selected="true">Slab</mat-chip>
-    <mat-chip color="accent" selected="true">Overhang</mat-chip>
-  </mat-chip-list>
+  <div class="route-filter">
+    <mat-chip-list>
+      <mat-chip color="primary" selected="true">All</mat-chip>
+      <mat-chip color="primary" selected="true">Boulder</mat-chip>
+      <mat-chip color="primary" selected="true">Lead</mat-chip>
+      <mat-chip color="primary" selected="true">Top-Rope</mat-chip>
+    </mat-chip-list>
+  </div>
+  <div class="route-filter">
+    <mat-chip-list>
+      <mat-chip color="accent" selected="true">All</mat-chip>
+      <mat-chip color="accent" selected="true">Zone 1</mat-chip>
+      <mat-chip color="accent" selected="true">Zone 2</mat-chip>
+      <mat-chip color="accent" selected="true">Zone 3</mat-chip>
+      <mat-chip color="accent" selected="true">Zone 4</mat-chip>
+    </mat-chip-list>
+  </div>
   <mat-table #table [dataSource]="dataSource">
     <ng-container matColumnDef="grade">
       <mat-header-cell *matHeaderCellDef> grade </mat-header-cell>
-      <mat-cell *matCellDef="let element" [style.color]="'#' + element.color"> {{element.grade}} </mat-cell>
+      <mat-cell *matCellDef="let element" class="color-cell">
+        <div class="route-grade color-block" [style.background-color]="'#' + element.color">{{element.grade}}</div>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="setter">
@@ -21,17 +29,27 @@
       <mat-cell *matCellDef="let element"> {{element.setter}} </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="likes">
-      <mat-header-cell *matHeaderCellDef> likes </mat-header-cell>
-      <mat-cell *matCellDef="let likes">
-        <i class="fa fa-thumbs-up" aria-hidden="true"></i> 2 </mat-cell>
+    <ng-container matColumnDef="attempt">
+      <mat-header-cell *matHeaderCellDef> attempt </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button mat-mini-fab  color="primary">0</button>
+      </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="dislikes">
-      <mat-header-cell *matHeaderCellDef> dislikes </mat-header-cell>
+    <ng-container matColumnDef="complete">
+      <mat-header-cell *matHeaderCellDef> complete </mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <i class="fa fa-thumbs-down" aria-hidden="true"></i> 3 </mat-cell>
+        <button mat-mini-fab color="accent">0</button>
+      </mat-cell>
     </ng-container>
+
+    <ng-container matColumnDef="rate">
+      <mat-header-cell *matHeaderCellDef> rate </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <app-rate [routeId]="element.id"></app-rate>
+      </mat-cell>
+    </ng-container>
+
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

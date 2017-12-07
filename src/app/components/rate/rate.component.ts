@@ -34,7 +34,7 @@ export class RateComponent implements OnInit {
       this.selectedRating = Rating.unselected;
       this.rateRoute.emit(new RouteRating(this.routeId, Rating.like));
     } else {
-      this.selectedRating = Rating.like;
+      this.selectedRating = Rating.dislike;
       this.rateRoute.emit(new RouteRating(this.routeId, Rating.dislike));
     }
   }

@@ -33,7 +33,7 @@ let response = {
 // Get users
 router.get('/routes', (req, res) => {
     connection((db) => {
-        db.collection('routes').find({})
+        db.collection('gym_1').find({})
             .toArray()
             .then((routes) => {
                 response.data = routes;
@@ -47,86 +47,80 @@ router.get('/routes', (req, res) => {
 
 router.post('/routes', (req, res) => {
   connection((db) => {
-        db.collection('routes').insertMany([{
-            "gym": "The Front",
-            "zone": "Wave Wall",
-            "color": "FFEE00",
-            "type": "boulder",
-            "grade": "v1",
-            "setter":"Audra O'Hara Jr.",
-            "attempts": 0,
-            "sends": 0
-        },
-        {
-            "gym": "The Front",
-            "zone": "Wave Wall",
-            "color": "FF0000",
-            "type": "boulder",
-            "grade": "v3",
-            "setter":"Candice Wyman",
-            "attempts": 0,
-            "sends": 0
-        },
-        {
-            "gym": "The Front",
-            "zone": "Old Gym",
-            "color": "0D7FFF",
-            "type": "boulder",
-            "grade": "v5",
-            "setter":"Audra O'Hara Jr.",
-            "attempts": 0,
-            "sends": 0
-        },
-        {
-            "gym": "The Front",
-            "zone": "Old Gym",
-            "color": "E8840C",
-            "type": "boulder",
-            "grade": "v2",
-            "setter":"Audra O'Hara Jr.",
-            "attempts": 0,
-            "sends": 0
-        },
-        {
-            "gym": "The Front",
-            "zone": "Old Gym",
-            "color": "FFEE00",
-            "type": "Lead",
-            "grade": "5.10a",
-            "setter":"Candice Wyman",    
-            "attempts": 0,
-            "sends": 0
-        },
-        {
-            "gym": "The Front",
-            "zone": "Old Gym",
-            "color": "FF0000",
-            "type": "Lead",
-            "grade": "5.11",
-            "setter":"Audra O'Hara Jr.",
-            "attempts": 0,
-            "sends": 0
-        },
-        {
-            "gym": "The Front",
-            "zone": "Old Gym",
-            "color": "0D7FFF",
-            "type": "Lead",
-            "grade": "5.10b",
-            "setter":"Candice Wyman",
-            "attempts": 0,
-            "sends": 0
-        },
-        {
-            "gym": "The Front",
-            "zone": "Old Gym",
-            "color": "E8840C",
-            "type": "Lead",
-            "grade": "5.10c",
-            "setter":"Audra O'Hara Jr.",
-            "attempts": 0,
-            "sends": 0
-        }])
+        db.collection('gym_1').insertMany(
+            [{
+                "zone": "Zone 1",
+                "color": "FFEE00",
+                "type": "boulder",
+                "grade": "v1",
+                "setter":"Audra O'Hara Jr.",
+                "likes":0,
+                "dislikes":0
+            },
+            {
+                "zone": "Zone 1",
+                "color": "FF0000",
+                "type": "boulder",
+                "grade": "v3",
+                "setter":"Candice Wyman",
+                "likes":0,
+                "dislikes":0
+            },
+            {
+                
+                "zone": "Zone 2",
+                "color": "0D7FFF",
+                "type": "boulder",
+                "grade": "v5",
+                "setter":"Audra O'Hara Jr.",
+                "likes":0,
+                "dislikes":0
+            },
+            {
+                "zone": "Zone 2",
+                "color": "E8840C",
+                "type": "boulder",
+                "grade": "v2",
+                "setter":"Audra O'Hara Jr.",
+                "likes":0,
+                "dislikes":0
+            },
+            {
+                "zone": "Zone 2",
+                "color": "FFEE00",
+                "type": "Lead",
+                "grade": "5.10a",
+                "setter":"Candice Wyman",
+                "likes":0,
+                "dislikes":0
+            },
+            {
+                "zone": "Zone 2",
+                "color": "FF0000",
+                "type": "Lead",
+                "grade": "5.11",
+                "setter":"Audra O'Hara Jr.",
+                "likes":0,
+                "dislikes":0
+            },
+            {
+                "zone": "Zone 2",
+                "color": "0D7FFF",
+                "type": "Lead",
+                "grade": "5.10b",
+                "setter":"Candice Wyman",
+                "likes":0,
+                "dislikes":0
+            },
+            {
+                "zone": "Zone 2",
+                "color": "E8840C",
+                "type": "Lead",
+                "grade": "5.10c",
+                "setter":"Audra O'Hara Jr.",
+                "likes":0,
+                "dislikes":0
+            }])
             .then(function(result) {
               return result;
             })
