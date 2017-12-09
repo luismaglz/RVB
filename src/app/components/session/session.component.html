@@ -18,40 +18,49 @@
   </div>
   <mat-table #table [dataSource]="dataSource">
     <ng-container matColumnDef="grade">
-      <mat-header-cell *matHeaderCellDef> grade </mat-header-cell>
-      <mat-cell *matCellDef="let element" class="color-cell">
-        <div class="route-grade color-block" [style.background-color]="'#' + element.color">{{element.grade}}</div>
+      <mat-header-cell color="primary" *matHeaderCellDef>Route</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <div class="route-info-container">
+          <div class="color-cell" [style.background-color]="'#' + element.color"></div>
+          <div class="text-cell">
+            <div class="route-grade">
+              G: {{element.grade}}
+            </div>
+            <div class="route-setter">
+              S: {{element.setter}}
+            </div>
+          </div>
+        </div>
       </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="setter">
-      <mat-header-cell *matHeaderCellDef> setter </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.setter}} </mat-cell>
-    </ng-container>
-
     <ng-container matColumnDef="attempt">
-      <mat-header-cell *matHeaderCellDef> attempt </mat-header-cell>
+      <mat-header-cell color="primary" *matHeaderCellDef>attempt</mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button mat-mini-fab  color="primary">0</button>
+        <i class="fa fa-angle-double-down control-icon remove" aria-hidden="true" (click)="removeAttempt(element._id)"></i>
+        <span class="route-counter">{{getAttempts(element._id)}}</span>
+        <i class="fa fa-angle-double-up control-icon add" aria-hidden="true" (click)="addAttempt(element._id)"></i>
       </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="complete">
-      <mat-header-cell *matHeaderCellDef> complete </mat-header-cell>
+      <mat-header-cell color="primary" *matHeaderCellDef>complete</mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button mat-mini-fab color="accent">0</button>
+        <i class="fa fa-angle-double-down control-icon remove" aria-hidden="true" (click)="removeComplete(element._id)"></i>
+        <span class="route-counter">{{getCompleted(element._id)}}</span>
+        <i class="fa fa-angle-double-up control-icon add" aria-hidden="true" (click)="addComplete(element._id)"></i>
       </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="rate">
-      <mat-header-cell *matHeaderCellDef> rate </mat-header-cell>
+      <mat-header-cell color="primary" *matHeaderCellDef>rate</mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <app-rate [routeId]="element.id"></app-rate>
+        <app-rate [routeId]="element.id" class="rate-component"></app-rate>
       </mat-cell>
     </ng-container>
 
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-row class="session-row" *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 </div>

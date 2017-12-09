@@ -46,83 +46,83 @@ router.get('/routes', (req, res) => {
 });
 
 router.post('/routes', (req, res) => {
-  connection((db) => {
+    connection((db) => {
         db.collection('gym_1').insertMany(
             [{
                 "zone": "Zone 1",
                 "color": "FFEE00",
                 "type": "boulder",
                 "grade": "v1",
-                "setter":"Audra O'Hara Jr.",
-                "likes":0,
-                "dislikes":0
+                "setter": "Audra O'Hara Jr.",
+                "likes": 0,
+                "dislikes": 0
             },
             {
                 "zone": "Zone 1",
                 "color": "FF0000",
                 "type": "boulder",
                 "grade": "v3",
-                "setter":"Candice Wyman",
-                "likes":0,
-                "dislikes":0
+                "setter": "Candice Wyman",
+                "likes": 0,
+                "dislikes": 0
             },
             {
-                
+
                 "zone": "Zone 2",
                 "color": "0D7FFF",
                 "type": "boulder",
                 "grade": "v5",
-                "setter":"Audra O'Hara Jr.",
-                "likes":0,
-                "dislikes":0
+                "setter": "Audra O'Hara Jr.",
+                "likes": 0,
+                "dislikes": 0
             },
             {
                 "zone": "Zone 2",
                 "color": "E8840C",
                 "type": "boulder",
                 "grade": "v2",
-                "setter":"Audra O'Hara Jr.",
-                "likes":0,
-                "dislikes":0
+                "setter": "Audra O'Hara Jr.",
+                "likes": 0,
+                "dislikes": 0
             },
             {
                 "zone": "Zone 2",
                 "color": "FFEE00",
                 "type": "Lead",
                 "grade": "5.10a",
-                "setter":"Candice Wyman",
-                "likes":0,
-                "dislikes":0
+                "setter": "Candice Wyman",
+                "likes": 0,
+                "dislikes": 0
             },
             {
                 "zone": "Zone 2",
                 "color": "FF0000",
                 "type": "Lead",
                 "grade": "5.11",
-                "setter":"Audra O'Hara Jr.",
-                "likes":0,
-                "dislikes":0
+                "setter": "Audra O'Hara Jr.",
+                "likes": 0,
+                "dislikes": 0
             },
             {
                 "zone": "Zone 2",
                 "color": "0D7FFF",
                 "type": "Lead",
                 "grade": "5.10b",
-                "setter":"Candice Wyman",
-                "likes":0,
-                "dislikes":0
+                "setter": "Candice Wyman",
+                "likes": 0,
+                "dislikes": 0
             },
             {
                 "zone": "Zone 2",
                 "color": "E8840C",
                 "type": "Lead",
                 "grade": "5.10c",
-                "setter":"Audra O'Hara Jr.",
-                "likes":0,
-                "dislikes":0
+                "setter": "Audra O'Hara Jr.",
+                "likes": 0,
+                "dislikes": 0
             }])
-            .then(function(result) {
-              return result;
+            .then(function (result) {
+                return result;
             })
             .catch((err) => {
                 sendError(err, res);
@@ -130,20 +130,31 @@ router.post('/routes', (req, res) => {
     });
 });
 
-router.post('/google-token/validate', (req, res) =>{
+router.post('/google-token/validate', (req, res) => {
     var auth = new GoogleAuth;
     var client = new auth.OAuth2(clientId, '', '');
     client.verifyIdToken(
-    req.body.token,
-    clientId,
-    function(e, login) {
-        if(e){
-            sendError(e, res);
-        }
-      var payload = login.getPayload();
-      var userid = payload['sub'];
-    })
+        req.body.token,
+        clientId,
+        function (e, login) {
+            if (e) {
+                sendError(e, res);
+            }
+            var payload = login.getPayload();
+            var userid = payload['sub'];
+        })
 });
 
+router.post('/sessions/complete', (req, res) => {
+    connection((db) => {
+        db.collection('sessions').inssert(
 
+        ).then(function (result) {
+            return result;
+        }).catch((err) => {
+            sendError(err, res);
+        });
+    });
+
+})
 module.exports = router;

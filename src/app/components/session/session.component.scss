@@ -1,15 +1,57 @@
-.color-cell{
-    flex-direction:row;
-}
-.color-block{
-    height:20px;
-    width:40px;
-    display: inline-flex;
-}
-.route-grade{
-    display: inline-flex;
-    margin-left:10px;
-}
 .route-filter{
     padding:5px 10px;
+}
+
+.control-icon{
+    font-size:24px;
+    transition:all 0.1s;
+    &.add{
+        color:green;
+    }
+    &.remove{
+        color:red;
+    }
+}
+
+.route-counter{
+    font-size: 24px;
+    font-weight: bold;
+    width:30px;
+    display: inline-block;
+    text-align: center;
+}
+
+mat-row.session-row{
+    padding: 0 10px;
+}
+
+
+mat-header-cell{
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.route-info-container{
+    display: flex;
+    flex-direction: row;
+    .color-cell{
+        display: inline-flex;
+        flex:1 1 20%;
+        min-width: 15px;
+    }
+    .text-cell{
+        display: inline-flex;
+        flex-direction: column;
+        flex: 5 5 80%;
+        margin-left:10px;
+        .route-grade, .route-setter{
+            display: flex;
+            flex:1 1 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.rate-component{
+    max-width:80px;
 }

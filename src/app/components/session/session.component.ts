@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'app-session',
@@ -10,8 +11,8 @@ export class SessionComponent implements OnInit {
   @Input() routeData: Array<RouteData>;
 
   dataSource = null;
-  displayedColumns = ['grade', 'setter', 'attempt', 'complete', 'rate'];
-  currentSessionData: Array<SessionRouteData> = new Array<SessionRouteData>();
+  displayedColumns = ['grade', 'attempt', 'complete', 'rate'];
+  currentSessionData: { [routeId: string]: SessionRouteData } = {};
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource<RouteData>(this.routeData);
@@ -21,15 +22,49 @@ export class SessionComponent implements OnInit {
 
   }
 
-  addAttempt(routeId: string) {
-
+  getAttempts(routeId: string): number {
+    if (this.currentSessionData[routeId]) {
+      return this.currentSessionData[routeId].attempts;
+    }
+    return 0;
   }
 
-  addComplete(routeId: string) {
-
+  getCompleted(routeId: string): number {
+    if (this.currentSessionData[routeId]) {
+      return this.currentSessionData[routeId].completed;
+    }
+    return 0;
   }
 
-  constructor() { }
+  addAttempt(routeId: string): void {
+    if (!this.currentSessionData[routeId]) {
+      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+    }
+    this.currentSessionData[routeId].addAttempt();
+  }
+
+  removeAttempt(routeId:string):void{
+    if (!this.currentSessionData[routeId]) {
+      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+    }
+    this.currentSessionData[routeId].removeAttempt();
+  }
+
+  addComplete(routeId: string): void {
+    if (!this.currentSessionData[routeId]) {
+      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+    }
+    this.currentSessionData[routeId].addCompleted();
+  }
+
+  removeComplete(routeId:string):void{
+    if (!this.currentSessionData[routeId]) {
+      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+    }
+    this.currentSessionData[routeId].removeCompleted();
+  }
+
+  constructor(private _dataService: DataService) { }
 }
 
 interface RouteData {
@@ -48,8 +83,8 @@ class SessionRouteData {
   completed: number;
   comments: string;
 
-  constructor(routeData: RouteData) {
-    this.routeId = routeData.id;
+  constructor(routeId: string) {
+    this.routeId = routeId;
     this.attempts = 0;
     this.completed = 0;
     this.comments = null;
