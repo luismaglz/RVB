@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule, MatChipsModule, MatTabsModule } from '@angular/material';
+import { RouterModule, Routes } from '@angular/router';
 
 // Import the Http Module and our Data Service
 import { HttpModule } from '@angular/http';
@@ -15,15 +16,13 @@ import { SessionComponent } from './components/session/session.component';
 import { RateComponent } from './components/rate/rate.component';
 
 
+const appRoutes: Routes = [
+  { path: 'home', component: AppComponent },
+  { path: 'session', component: SessionComponent },
+  { path: '**', component: AppComponent }
+];
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    RouteTrackerComponent,
-    GoogleLoginComponent,
-    CurrentUserComponent,
-    SessionComponent,
-    RateComponent
-  ],
   imports: [
     BrowserModule,
     HttpModule,
@@ -33,7 +32,19 @@ import { RateComponent } from './components/rate/rate.component';
     MatToolbarModule,
     MatChipsModule,
     MatTabsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true }
+    )
+  ],
+  declarations: [
+    AppComponent,
+    RouteTrackerComponent,
+    GoogleLoginComponent,
+    CurrentUserComponent,
+    SessionComponent,
+    RateComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
