@@ -1,7 +1,15 @@
 # Dockerfile extending the generic Node image with application files for a
 # single application.
 FROM gcr.io/google_appengine/nodejs
-COPY . /app/
+COPY dist /app/
+COPY .angular-cli.json /app/
+COPY package-lock.json /app/
+COPY package.json /app/
+COPY server.js /app/
+COPY server /app/
+COPY src /app/
+COPY app.yaml /app/
+
 # You have to specify "--unsafe-perm" with npm install
 # when running as root.  Failing to do this can cause
 # install to appear to succeed even if a preinstall
