@@ -17,7 +17,7 @@ import { RateComponent } from './components/rate/rate.component';
 
 
 const appRoutes: Routes = [
-  { path: 'home', component: AppComponent },
+  { path: '', component: AppComponent },
   { path: 'session', component: SessionComponent },
   { path: '**', component: AppComponent }
 ];
