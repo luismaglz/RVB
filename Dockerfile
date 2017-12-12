@@ -22,4 +22,4 @@ RUN npm install --unsafe-perm || \
       cat npm-debug.log; \
     fi) && false)
 RUN npm install -g @angular/cli
-CMD node server
+CMD npm start
