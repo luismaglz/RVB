@@ -9,7 +9,7 @@ const api = require('./server/routes/api');
 
 // Parsers
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -29,3 +29,12 @@ app.set('port', port);
 const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
+
+// //Cloud trace
+// if (process.env.NODE_ENV === "production") {
+//     require("@google/cloud-trace").start();
+// }
+
+// if (process.env.GCLOUD_PROJECT) {
+//     require("@google/cloud-debug").start();
+// }

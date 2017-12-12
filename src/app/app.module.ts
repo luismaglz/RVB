@@ -14,10 +14,11 @@ import { GoogleLoginComponent } from './components/login/google-login/google-log
 import { CurrentUserComponent } from './components/current-user/current-user.component';
 import { SessionComponent } from './components/session/session.component';
 import { RateComponent } from './components/rate/rate.component';
+import { HomeComponent } from './components/home/home.component';
 
 
 const appRoutes: Routes = [
-  { path: '', component: AppComponent },
+  { path: '', component: HomeComponent },
   { path: 'session', component: SessionComponent },
   { path: '**', component: AppComponent }
 ];
@@ -44,7 +45,8 @@ const appRoutes: Routes = [
     GoogleLoginComponent,
     CurrentUserComponent,
     SessionComponent,
-    RateComponent
+    RateComponent,
+    HomeComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
