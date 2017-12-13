@@ -15,10 +15,18 @@ import { CurrentUserComponent } from './components/current-user/current-user.com
 import { SessionComponent } from './components/session/session.component';
 import { RateComponent } from './components/rate/rate.component';
 import { HomeComponent } from './components/home/home.component';
+import { SessionHeaderComponent } from './components/session-header/session-header.component';
 
+//Redux
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+//Reducers
+import { userInfoReducer } from './store/reducers';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: GoogleLoginComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'session', component: SessionComponent },
   { path: '**', component: AppComponent }
 ];
@@ -37,7 +45,13 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
-    )
+    ),
+    StoreModule.forRoot({
+      userInfo: userInfoReducer
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25
+    })
   ],
   declarations: [
     AppComponent,
@@ -46,7 +60,8 @@ const appRoutes: Routes = [
     CurrentUserComponent,
     SessionComponent,
     RateComponent,
-    HomeComponent
+    HomeComponent,
+    SessionHeaderComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

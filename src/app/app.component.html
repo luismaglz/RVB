@@ -1,4 +1,1 @@
-<app-current-user *ngIf="isLoggedIn && profile" [profile]="profile"></app-current-user>
-<app-google-login *ngIf="!isLoggedIn" (logInSuccess)="logInSuccess($event)" (profile)="onProfile($event)" (token)="onToken($event)"></app-google-login>
-
 <router-outlet></router-outlet>

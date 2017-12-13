@@ -1,8 +1,11 @@
 <mat-toolbar color="primary">
-  <img class="user-image" [src]="profile.getImageUrl()" />
-  <span class="user-name">{{profile.getName()}}</span>
+  <ng-template [ngIf]="profile">
+    <img class="user-image" [src]="profile.imageUrl" />
+    <span class="user-name">{{profile.name}}</span>
+  </ng-template>
   <span class="session-controls">
-    <!-- <button mat-raised-button color="accent" (click)="createRoutes()">New Session</button>
-    <button mat-raised-button color="accent" (click)="createRoutes()">Finish Session</button> -->
+    <a routerLink="/session" routerLinkActive="active">
+      <button mat-raised-button color="accent">Start Session</button>
+    </a>
   </span>
 </mat-toolbar>

@@ -45,6 +45,39 @@ router.get('/routes', (req, res) => {
     });
 });
 
+function getIdFromToken(token) {
+    var auth = new GoogleAuth;
+    var client = new auth.OAuth2(clientId, '', '');
+    var userId = null;
+    client.verifyIdToken(
+        req.body.token,
+        clientId,
+        function (e, login) {
+            if (e) {
+                sendError(e, res);
+            }
+            var payload = login.getPayload();
+            userId = payload['sub'];
+        });
+    return userId;
+}
+
+router.post('/sessions', (req, res) => {
+    const sessionData = req.data;
+    let userId = getIdFromToken(request.body.token);
+
+    connection((db) => {
+        db.collection('sessions')
+            .insertOne([{
+                userId:userId,
+                date:Date.now(),
+                session:request.body.routes
+            }])
+            .then(function (result) { return result; })
+            .catch((err) => { sendError(err, res); });
+    });
+});
+
 router.post('/routes', (req, res) => {
     connection((db) => {
         db.collection('gym_1').insertMany(

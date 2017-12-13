@@ -12,9 +12,7 @@ export class AppComponent implements OnInit {
   profile = null;
   routeData = null;
 
-  ngOnInit(){
-    this.getRoutes();
-  }
+  ngOnInit() {}
 
   logInSuccess(isLoggedIn: boolean) {
     this.isLoggedIn = isLoggedIn;
@@ -28,18 +26,7 @@ export class AppComponent implements OnInit {
     this.profile = profile;
   }
 
-  createRoutes() {
-    this._dataService.createRoutes().subscribe(data => {
-      debugger;
-    });
-  }
+  constructor() {
 
-  getRoutes() {
-    this._dataService.getRoutes().subscribe(data => {
-      if (!data) { return null; }
-      this.routeData = data;
-    });
   }
-
-  constructor(private _dataService: DataService) { }
 }

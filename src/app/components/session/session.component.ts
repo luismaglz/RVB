@@ -2,24 +2,36 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { DataService } from '../../data.service';
 
+import { SessionRouteData, SessionRouteDataDictionary, IRouteData } from '../../models/all-models';
+
 @Component({
   selector: 'app-session',
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss']
 })
 export class SessionComponent implements OnInit {
-  @Input() routeData: Array<RouteData>;
+  @Input() routeData: Array<IRouteData>;
 
   dataSource = null;
   displayedColumns = ['grade', 'attempt', 'complete', 'rate'];
-  currentSessionData: { [routeId: string]: SessionRouteData } = {};
+  currentSessionData: SessionRouteDataDictionary = new SessionRouteDataDictionary();
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<RouteData>(this.routeData);
+    this.getRoutes();
   }
 
   completeSession() {
+    this._dataService.completeSession(this.currentSessionData).subscribe(response => {
+      if (!response) { return null; }
+      debugger;
+    })
+  }
 
+  getRoutes() {
+    this._dataService.getRoutes().subscribe(routeData => {
+      if (!routeData) { return null; }
+      this.dataSource = new MatTableDataSource<IRouteData>(routeData);
+    });
   }
 
   getAttempts(routeId: string): number {
@@ -43,7 +55,7 @@ export class SessionComponent implements OnInit {
     this.currentSessionData[routeId].addAttempt();
   }
 
-  removeAttempt(routeId:string):void{
+  removeAttempt(routeId: string): void {
     if (!this.currentSessionData[routeId]) {
       this.currentSessionData[routeId] = new SessionRouteData(routeId);
     }
@@ -57,7 +69,7 @@ export class SessionComponent implements OnInit {
     this.currentSessionData[routeId].addCompleted();
   }
 
-  removeComplete(routeId:string):void{
+  removeComplete(routeId: string): void {
     if (!this.currentSessionData[routeId]) {
       this.currentSessionData[routeId] = new SessionRouteData(routeId);
     }
@@ -65,61 +77,4 @@ export class SessionComponent implements OnInit {
   }
 
   constructor(private _dataService: DataService) { }
-}
-
-interface RouteData {
-  id: string;
-  zone: string;
-  type: string;
-  grade: string;
-  color: String;
-  likes: string;
-  dislikes: string;
-}
-
-class SessionRouteData {
-  routeId: string;
-  attempts: number;
-  completed: number;
-  comments: string;
-
-  constructor(routeId: string) {
-    this.routeId = routeId;
-    this.attempts = 0;
-    this.completed = 0;
-    this.comments = null;
-  }
-
-  addAttempt() {
-    this.attempts++;
-  }
-
-  removeAttempt() {
-    if (this.attempts > 0) {
-      this.attempts--;
-    }
-  }
-
-  addCompleted() {
-    this.completed++;
-  }
-
-  removeCompleted() {
-    if (this.completed > 0) {
-      this.completed--;
-    }
-  }
-
-  setComments(comments: string) {
-    this.comments = comments;
-  }
-
-  setAttempts(attempts: number) {
-    this.attempts = attempts;
-  }
-
-  setCompleted(completed: number) {
-    this.completed = completed;
-  }
-
 }
