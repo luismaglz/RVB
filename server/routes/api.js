@@ -4,7 +4,6 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const GoogleAuth = require('google-auth-library');
 
-// const uri = 'mongodb://luismaglz:tocopan88@cluster0-shard-00-00-uxxuf.mongodb.net:27017,cluster0-shard-00-01-uxxuf.mongodb.net:27017,cluster0-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin';
 const uri = 'mongodb://luismaglz:tocopan88@route-test-cluster-shard-00-00-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-01-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Route-Test-Cluster-shard-0&authSource=admin';
 const clientId = '832252046561-m4te28o0t69e40r0nl1tuddu59h6q7er.apps.googleusercontent.com';
 // Connect
@@ -45,36 +44,62 @@ router.get('/routes', (req, res) => {
     });
 });
 
-function getIdFromToken(token) {
+
+function verifyToken(res, token, callback, data) {
     var auth = new GoogleAuth;
     var client = new auth.OAuth2(clientId, '', '');
     var userId = null;
     client.verifyIdToken(
-        req.body.token,
+        token,
         clientId,
-        function (e, login) {
+        function(e, login){
             if (e) {
                 sendError(e, res);
             }
             var payload = login.getPayload();
-            userId = payload['sub'];
-        });
+            var userid = payload['sub'];
+            callback(userid, data, res);
+        }
+        
+    );
     return userId;
 }
 
-router.post('/sessions', (req, res) => {
-    const sessionData = req.data;
-    let userId = getIdFromToken(request.body.token);
 
+function addSession(userId, routes, res) {
+    var date = Date.now()
     connection((db) => {
         db.collection('sessions')
-            .insertOne([{
-                userId:userId,
-                date:Date.now(),
-                session:request.body.routes
-            }])
-            .then(function (result) { return result; })
-            .catch((err) => { sendError(err, res); });
+            .insertOne({
+                userId: userId,
+                date: date,
+                session: routes
+            })
+            .then(function (result) { 
+                response.data = result;
+                res.json(response);
+            })
+            .catch((err) => { 
+                sendError(err, res); 
+            });
+    });
+}
+
+router.post('/session', (req, res) => {
+    verifyToken(res, req.body.token, addSession, req.body.routes);
+});
+
+router.get('/session', (req, res) => {
+    connection((db) => {
+        db.collection('sessions').find({})
+            .toArray()
+            .then((sessions) => {
+                response.data = sessions;
+                res.json(response);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
     });
 });
 

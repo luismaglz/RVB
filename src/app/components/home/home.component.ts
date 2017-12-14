@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../../data.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  sessions:any;
 
-  ngOnInit() {
+  getSessions() {
+    this._dataService.getSessions().subscribe(sessions => {
+      if (!sessions) { return null; }
+      debugger;
+      this.sessions = sessions;
+    });
   }
 
+  ngOnInit() {
+    this.getSessions();
+  }
+
+  constructor(private _dataService: DataService) { }
 }

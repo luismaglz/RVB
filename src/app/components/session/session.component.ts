@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { DataService } from '../../data.service';
-
+import { Router, ActivatedRoute } from '@angular/router';
 import { SessionRouteData, SessionRouteDataDictionary, IRouteData } from '../../models/all-models';
 
 @Component({
@@ -22,9 +22,8 @@ export class SessionComponent implements OnInit {
 
   completeSession() {
     this._dataService.completeSession(this.currentSessionData).subscribe(response => {
-      if (!response) { return null; }
-      debugger;
-    })
+      this.router.navigate(['home']);
+    });
   }
 
   getRoutes() {
@@ -76,5 +75,6 @@ export class SessionComponent implements OnInit {
     this.currentSessionData[routeId].removeCompleted();
   }
 
-  constructor(private _dataService: DataService) { }
+  constructor(private _dataService: DataService, private route: ActivatedRoute,
+    private router: Router) { }
 }

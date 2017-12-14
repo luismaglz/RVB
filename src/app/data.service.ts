@@ -31,12 +31,19 @@ export class DataService {
   }
 
   completeSession(sessionData: SessionRouteDataDictionary) {
-      const request = new AddSessionRequest();
-      request.routes = sessionData;
-      request.token = this.token;
+    const request = new AddSessionRequest();
+    request.routes = sessionData;
+    request.token = this.token;
 
-      return this._http.post('/api/session', request)
-        .map(result => this.result = result.json().data);
+    return this._http.post('/api/session', request)
+      .map(result => {
+        this.result = result.json().data;
+      });
+  }
+
+  getSessions() {
+    return this._http.get('/api/session')
+      .map(result => this.result = result.json().data);
   }
 
   validateGoogleToken(token: string) {

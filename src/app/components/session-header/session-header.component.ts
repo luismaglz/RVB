@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-session-header',
@@ -6,7 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./session-header.component.scss']
 })
 export class SessionHeaderComponent implements OnInit {
+  @Output() sessionCompleted = new EventEmitter<boolean>();
 
+  completeSession(){
+    this.sessionCompleted.emit(true);
+  }
   constructor() { }
 
   ngOnInit() {

@@ -1,7 +1,18 @@
 <app-current-user></app-current-user>
 <mat-tab-group>
     <mat-tab label="NewsFeed">
-
+        <ng-template [ngIf]="sessions">
+            <mat-card *ngFor="let session of sessions">
+                <mat-card-header>
+                    <div mat-card-avatar class="example-header-image"></div>
+                    <mat-card-title>{{session.date | date:'fullDate'}}</mat-card-title>
+                    <mat-card-subtitle>Session at the Front</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    Session Data Here
+                </mat-card-content>
+            </mat-card>
+        </ng-template>
     </mat-tab>
     <mat-tab label="Explore">
         <!-- <app-route-tracker *ngIf="routeData" [token]="token" [routeData]="routeData"></app-route-tracker> -->
