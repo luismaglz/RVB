@@ -1,0 +1,25 @@
+.main-login{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    .login-message{
+        width:100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        flex:1 1 100%;
+        h1,h3{
+            display: block;
+            width:100%;
+            text-transform: uppercase;
+        }
+    }
+
+    .login-controls{
+        display: flex;
+        flex:1 1 100%;
+        justify-content: center;
+        flex-direction: column;
+    }
+}

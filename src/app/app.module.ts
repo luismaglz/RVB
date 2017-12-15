@@ -23,9 +23,10 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 //Reducers
 import { userInfoReducer } from './store/reducers';
+import { MainLoginComponent } from './components/login/main-login/main-login.component';
 
 const appRoutes: Routes = [
-  { path: '', component: GoogleLoginComponent },
+  { path: '', component: MainLoginComponent },
   { path: 'home', component: HomeComponent },
   { path: 'session', component: SessionComponent },
   { path: '**', component: AppComponent }
@@ -62,7 +63,8 @@ const appRoutes: Routes = [
     SessionComponent,
     RateComponent,
     HomeComponent,
-    SessionHeaderComponent
+    SessionHeaderComponent,
+    MainLoginComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

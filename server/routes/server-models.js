@@ -49,4 +49,13 @@ var AddSessionRequest = /** @class */ (function () {
     return AddSessionRequest;
 }());
 exports.AddSessionRequest = AddSessionRequest;
+var UserInfoRequest = /** @class */ (function () {
+    function UserInfoRequest(token, name, pictureUrl) {
+        this.token = token;
+        this.name = name;
+        this.pictureUrl = pictureUrl;
+    }
+    return UserInfoRequest;
+}());
+exports.UserInfoRequest = UserInfoRequest;
 //# sourceMappingURL=server-models.js.map

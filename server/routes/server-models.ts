@@ -80,3 +80,16 @@ export class AddSessionRequest {
     token: string;
     routes: SessionRouteDataDictionary;
 }
+
+export class UserInfoRequest {
+    token: string;
+    name: string;
+    pictureUrl: string;
+
+    constructor(token, name, pictureUrl) {
+        this.token = token;
+        this.name = name;
+        this.pictureUrl = pictureUrl;
+    }
+}
+

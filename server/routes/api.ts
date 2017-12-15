@@ -4,16 +4,17 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const GoogleAuth = require('google-auth-library');
 
-import { AddSessionRequest } from './server-models';
+import { AddSessionRequest, UserInfoRequest } from './server-models';
 
-const uri = 'mongodb://luismaglz:tocopan88@route-test-cluster-shard-00-00-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-01-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Route-Test-Cluster-shard-0&authSource=admin';
+const uri = "mongodb://luismaglz:tocopan88@route-test-cluster-shard-00-00-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-01-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Route-Test-Cluster-shard-0&authSource=admin";
 const clientId = '832252046561-m4te28o0t69e40r0nl1tuddu59h6q7er.apps.googleusercontent.com';
+
 // Connect
 const connection = (closure) => {
     return MongoClient.connect(uri, (err, db) => {
         if (err) {
             return console.log(err)
-        };
+        }
         closure(db);
     });
 };
@@ -27,13 +28,13 @@ const sendError = (err, res) => {
 };
 
 // Response handling
-let response = {
+const response = {
     status: 200,
     data: [],
     message: null
 };
 
-// Get users
+// Get routes for gym
 router.get('/routes', (req, res) => {
     connection((db) => {
         db.collection('gym_1').find({})
@@ -48,11 +49,53 @@ router.get('/routes', (req, res) => {
     });
 });
 
+// Sessions
+router.post('/session', (req, res) => {
+    const addSesssionRequest: AddSessionRequest = req.body;
+    verifyToken(res, addSesssionRequest.token, addSession, addSesssionRequest.routes);
+});
+
+router.get('/session', (req, res) => {
+    connection((db) => {
+        db.collection('sessions')
+            .find()
+            .toArray()
+            .then((sessions) => {
+                response.data = sessions;
+                res.json(response);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+});
+
+// Users
+router.post('/user', (req, res) => {
+    const userInfoRequest: UserInfoRequest = req.body;
+    verifyToken(res, userInfoRequest.token, findOrAddUser, userInfoRequest);
+});
+
+
+router.post('/routes', (req, res) => {
+    connection((db) => {
+        db.collection('gym_1').insertMany([])
+            .then(function (result) {
+                return result;
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+});
+
+
+// Helper methods
 
 function verifyToken(res, token: string, callback: Function, data) {
-    var auth = new GoogleAuth;
-    var client = new auth.OAuth2(clientId, '', '');
-    var userId = null;
+    const auth = new GoogleAuth;
+    const client = new auth.OAuth2(clientId, '', '');
+    const userId = null;
     client.verifyIdToken(
         token,
         clientId,
@@ -60,8 +103,8 @@ function verifyToken(res, token: string, callback: Function, data) {
             if (e) {
                 sendError(e, res);
             }
-            var payload = login.getPayload();
-            var userid = payload['sub'];
+            const payload = login.getPayload();
+            const userid = payload['sub'];
             callback(userid, data, res);
         }
 
@@ -69,9 +112,64 @@ function verifyToken(res, token: string, callback: Function, data) {
     return userId;
 }
 
+function findOrAddUser(userId: string, userInfoRequest: UserInfoRequest, res) {
+    connection((db) => {
+        db.collection('users').findOne({ _id: userId })
+            .then((user) => {
+                if (user) {
+                    if (user.name === userInfoRequest.name && user.pictureUrl === userInfoRequest.pictureUrl) {
+                        response.data = [];
+                        res.json(response);
+                    } else {
+                        updateUser(userId, userInfoRequest.name, userInfoRequest.pictureUrl, res);
+                    }
+                } else {
+                    updateUser(userId, userInfoRequest.name, userInfoRequest.pictureUrl, res);
+                }
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+}
+
+function addUser(userId: string, name: string, pictureUrl: string, res) {
+    connection((db) => {
+        db.collection('users')
+            .insertOne({
+                _id: userId,
+                name: name,
+                pictureUrl: pictureUrl
+            })
+            .then(function (result) {
+                response.data = [];
+                res.json(response);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+}
+
+function updateUser(userId: string, name: string, pictureUrl: string, res) {
+    connection((db) => {
+        db.collection('users')
+            .updateOne(
+            { _id: userId },
+            { $set: { _id: userId, name: name, pictureUrl: pictureUrl } },
+            { upsert: true }
+            )
+            .then(function (result) {
+                res.json(response);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+}
 
 function addSession(userId, routes, res) {
-    var date = Date.now()
+    const date = Date.now();
     connection((db) => {
         db.collection('sessions')
             .insertOne({
@@ -89,135 +187,4 @@ function addSession(userId, routes, res) {
     });
 }
 
-router.post('/session', (req, res) => {
-    const addSesssionRequest:AddSessionRequest = req.body;
-    verifyToken(res, addSesssionRequest.token, addSession, addSesssionRequest.routes);
-});
-
-router.get('/session', (req, res) => {
-    connection((db) => {
-        db.collection('sessions').find({})
-            .toArray()
-            .then((sessions) => {
-                response.data = sessions;
-                res.json(response);
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
-    });
-});
-
-router.post('/routes', (req, res) => {
-    connection((db) => {
-        db.collection('gym_1').insertMany(
-            [{
-                "zone": "Zone 1",
-                "color": "FFEE00",
-                "type": "boulder",
-                "grade": "v1",
-                "setter": "Audra O'Hara Jr.",
-                "likes": 0,
-                "dislikes": 0
-            },
-            {
-                "zone": "Zone 1",
-                "color": "FF0000",
-                "type": "boulder",
-                "grade": "v3",
-                "setter": "Candice Wyman",
-                "likes": 0,
-                "dislikes": 0
-            },
-            {
-
-                "zone": "Zone 2",
-                "color": "0D7FFF",
-                "type": "boulder",
-                "grade": "v5",
-                "setter": "Audra O'Hara Jr.",
-                "likes": 0,
-                "dislikes": 0
-            },
-            {
-                "zone": "Zone 2",
-                "color": "E8840C",
-                "type": "boulder",
-                "grade": "v2",
-                "setter": "Audra O'Hara Jr.",
-                "likes": 0,
-                "dislikes": 0
-            },
-            {
-                "zone": "Zone 2",
-                "color": "FFEE00",
-                "type": "Lead",
-                "grade": "5.10a",
-                "setter": "Candice Wyman",
-                "likes": 0,
-                "dislikes": 0
-            },
-            {
-                "zone": "Zone 2",
-                "color": "FF0000",
-                "type": "Lead",
-                "grade": "5.11",
-                "setter": "Audra O'Hara Jr.",
-                "likes": 0,
-                "dislikes": 0
-            },
-            {
-                "zone": "Zone 2",
-                "color": "0D7FFF",
-                "type": "Lead",
-                "grade": "5.10b",
-                "setter": "Candice Wyman",
-                "likes": 0,
-                "dislikes": 0
-            },
-            {
-                "zone": "Zone 2",
-                "color": "E8840C",
-                "type": "Lead",
-                "grade": "5.10c",
-                "setter": "Audra O'Hara Jr.",
-                "likes": 0,
-                "dislikes": 0
-            }])
-            .then(function (result) {
-                return result;
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
-    });
-});
-
-router.post('/google-token/validate', (req, res) => {
-    var auth = new GoogleAuth;
-    var client = new auth.OAuth2(clientId, '', '');
-    client.verifyIdToken(
-        req.body.token,
-        clientId,
-        function (e, login) {
-            if (e) {
-                sendError(e, res);
-            }
-            var payload = login.getPayload();
-            var userid = payload['sub'];
-        })
-});
-
-router.post('/sessions/complete', (req, res) => {
-    connection((db) => {
-        db.collection('sessions').inssert(
-
-        ).then(function (result) {
-            return result;
-        }).catch((err) => {
-            sendError(err, res);
-        });
-    });
-
-})
 module.exports = router;

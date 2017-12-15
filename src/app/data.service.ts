@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-import { SessionRouteDataDictionary, AddSessionRequest, IAppState, IProfile } from '../app/models/all-models';
+import { SessionRouteDataDictionary, AddSessionRequest, UserInfoRequest, IAppState, IProfile } from '../app/models/all-models';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -19,7 +19,7 @@ export class DataService {
       this.token = token;
     });
   }
-
+  // Routes 
   getRoutes() {
     return this._http.get('/api/routes')
       .map(result => this.result = result.json().data);
@@ -30,6 +30,7 @@ export class DataService {
       .map(result => this.result = result.json().data);
   }
 
+  // Sessions
   completeSession(sessionData: SessionRouteDataDictionary) {
     const request = new AddSessionRequest();
     request.routes = sessionData;
@@ -45,6 +46,14 @@ export class DataService {
     return this._http.get('/api/session')
       .map(result => this.result = result.json().data);
   }
+
+  // Users
+  updateUserInformation(token: string, name: string, imageUrl: string) {
+    const userRequest = new UserInfoRequest(token, name, imageUrl);
+    return this._http.post('/api/user', userRequest)
+      .map(result => this.result = result.json().data);
+  }
+
 
   validateGoogleToken(token: string) {
     return this._http.post('/api/google-token/validate', { token: token })
