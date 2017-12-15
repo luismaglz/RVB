@@ -2,14 +2,31 @@
 <mat-tab-group>
     <mat-tab label="NewsFeed">
         <ng-template [ngIf]="sessions">
-            <mat-card *ngFor="let session of sessions">
+            <mat-card *ngFor="let session of sessions" [attr.sessionId]="_id" class="session-card">
                 <mat-card-header>
-                    <div mat-card-avatar class="example-header-image"></div>
-                    <mat-card-title>{{session.date | date:'fullDate'}}</mat-card-title>
-                    <mat-card-subtitle>Session at the Front</mat-card-subtitle>
+                    <div mat-card-avatar class="header-image" [style.background-image]="'url(' + session.imageUrl + ')'"></div>
+                    <mat-card-title>
+                        <span class="user-name">{{session.name}}</span>
+                    </mat-card-title>
+                    <mat-card-subtitle><span class="session-date">{{session.date | date:'fullDate'}}</span></mat-card-subtitle>
                 </mat-card-header>
-                <mat-card-content>
-                    Session Data Here
+                <mat-card-content *ngIf="session.climbed" class="route-totals">
+                    <div *ngIf="session.climbed.lead > 0" class="route-total">
+                        <div class="route-total-title">lead</div>
+                        <div class="route-total-number">{{session.climbed.lead}}</div>
+                    </div>
+                    <div *ngIf="session.climbed.boulder > 0" class="route-total">
+                        <div class="route-total-title">boulder</div>
+                        <div class="route-total-number">{{session.climbed.boulder}}</div>
+                    </div>
+                    <div *ngIf="session.climbed.topRope > 0" class="route-total">
+                        <div class="route-total-title">topRope</div>
+                        <div class="route-total-number">{{session.climbed.topRope}}</div>
+                    </div>
+                    <div *ngIf="session.climbed.speed > 0" class="route-total">
+                        <div class="route-total-title">speed</div>
+                        <div class="route-total-number">{{session.climbed.speed}}</div>
+                    </div>
                 </mat-card-content>
             </mat-card>
         </ng-template>

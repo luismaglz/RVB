@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const GoogleAuth = require('google-auth-library');
 
-import { AddSessionRequest, UserInfoRequest } from './server-models';
+import { AddSessionRequest, UserInfoRequest, ISessionRecord, IUserRecord, ISessionInfo } from './server-models';
 
 const uri = "mongodb://luismaglz:tocopan88@route-test-cluster-shard-00-00-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-01-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Route-Test-Cluster-shard-0&authSource=admin";
 const clientId = '832252046561-m4te28o0t69e40r0nl1tuddu59h6q7er.apps.googleusercontent.com';
@@ -56,18 +56,7 @@ router.post('/session', (req, res) => {
 });
 
 router.get('/session', (req, res) => {
-    connection((db) => {
-        db.collection('sessions')
-            .find()
-            .toArray()
-            .then((sessions) => {
-                response.data = sessions;
-                res.json(response);
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
-    });
+    verifyToken(res, req.headers.usertoken, getSessions, null);
 });
 
 // Users
@@ -179,6 +168,51 @@ function addSession(userId, routes, res) {
             })
             .then(function (result) {
                 response.data = result;
+                res.json(response);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+}
+
+function getSessions(userId, data, res) {
+    connection((db) => {
+        db.collection('sessions')
+            .find()
+            .limit(10)
+            .toArray()
+            .then((sessions) => {
+                populateSessions(sessions, res);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+}
+
+function populateSessions(sessions: Array<ISessionRecord>, res) {
+    const users = Array.from(new Set(sessions.map(session => session.userId)));
+    connection((db) => {
+        db.collection('users')
+            .find({
+                _id: { $in: users }
+            })
+            .limit(10)
+            .toArray()
+            .then((userRecords: Array<IUserRecord>) => {
+                const populatedSessions = sessions.map(session => {
+                    const user = userRecords.find(u => u._id === session.userId);
+                    return {
+                        _id: session._id,
+                        name: (user && user.name ? user.name : 'climber'),
+                        imageUrl: (user && user.pictureUrl ? user.pictureUrl : ''),
+                        date: session.date,
+                        description: session.comments,
+                        climbed: session.totals
+                    } as ISessionInfo;
+                });
+                response.data = populatedSessions;
                 res.json(response);
             })
             .catch((err) => {

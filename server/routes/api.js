@@ -48,18 +48,7 @@ router.post('/session', function (req, res) {
     verifyToken(res, addSesssionRequest.token, addSession, addSesssionRequest.routes);
 });
 router.get('/session', function (req, res) {
-    connection(function (db) {
-        db.collection('sessions')
-            .find()
-            .toArray()
-            .then(function (sessions) {
-            response.data = sessions;
-            res.json(response);
-        })
-            .catch(function (err) {
-            sendError(err, res);
-        });
-    });
+    verifyToken(res, req.headers.usertoken, getSessions, null);
 });
 // Users
 router.post('/user', function (req, res) {
@@ -98,6 +87,7 @@ function findOrAddUser(userId, userInfoRequest, res) {
             .then(function (user) {
             if (user) {
                 if (user.name === userInfoRequest.name && user.pictureUrl === userInfoRequest.pictureUrl) {
+                    response.data = [];
                     res.json(response);
                 }
                 else {
@@ -122,6 +112,7 @@ function addUser(userId, name, pictureUrl, res) {
             pictureUrl: pictureUrl
         })
             .then(function (result) {
+            response.data = [];
             res.json(response);
         })
             .catch(function (err) {
@@ -152,6 +143,49 @@ function addSession(userId, routes, res) {
         })
             .then(function (result) {
             response.data = result;
+            res.json(response);
+        })
+            .catch(function (err) {
+            sendError(err, res);
+        });
+    });
+}
+function getSessions(userId, data, res) {
+    connection(function (db) {
+        db.collection('sessions')
+            .find()
+            .limit(10)
+            .toArray()
+            .then(function (sessions) {
+            populateSessions(sessions, res);
+        })
+            .catch(function (err) {
+            sendError(err, res);
+        });
+    });
+}
+function populateSessions(sessions, res) {
+    var users = Array.from(new Set(sessions.map(function (session) { return session.userId; })));
+    connection(function (db) {
+        db.collection('users')
+            .find({
+            _id: { $in: users }
+        })
+            .limit(10)
+            .toArray()
+            .then(function (userRecords) {
+            var populatedSessions = sessions.map(function (session) {
+                var user = userRecords.find(function (u) { return u._id === session.userId; });
+                return {
+                    _id: session._id,
+                    name: (user && user.name ? user.name : 'climber'),
+                    imageUrl: (user && user.pictureUrl ? user.pictureUrl : ''),
+                    date: session.date,
+                    description: session.comments,
+                    climbed: session.totals
+                };
+            });
+            response.data = populatedSessions;
             res.json(response);
         })
             .catch(function (err) {

@@ -1,3 +1,5 @@
+import { NumberSymbol } from "@angular/common/src/i18n/locale_data_api";
+
 // Interfaces
 export interface IRouteData {
     id: string;
@@ -21,6 +23,22 @@ export interface IUserInfoState {
 
 export interface IAppState {
     userInfo: IUserInfoState;
+}
+
+export interface ISessionInfo {
+    _id: string;
+    name: string;
+    imageUrl: string;
+    date: string;
+    description: string;
+    climbed: ISessionInfoClimbedTotals;
+}
+
+export interface ISessionInfoClimbedTotals {
+    lead: number;
+    boulder: number;
+    topRope: number;
+    speed: number;
 }
 
 // Classes
@@ -76,6 +94,13 @@ export class SessionRouteDataDictionary {
 }
 
 // Requests
+export class BaseRequest {
+    token: string;
+    constructor(token: string) {
+        this.token = token;
+    }
+}
+
 export class AddSessionRequest {
     token: string;
     routes: SessionRouteDataDictionary;

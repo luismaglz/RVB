@@ -25,9 +25,7 @@ export class GoogleLoginComponent {
       name: profile.getName(),
       imageUrl: profile.getImageUrl()
     } as IProfile;
-    debugger;
     this._dataService.updateUserInformation(userToken, profileInfo.name, profileInfo.imageUrl).subscribe(data => {
-      debugger;
       this.store.dispatch(new UserInfoActions.SetProfile(profileInfo));
       this.store.dispatch(new UserInfoActions.SetToken(userToken));
       this.router.navigate(['home']);

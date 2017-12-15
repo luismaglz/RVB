@@ -23,8 +23,48 @@ export interface IAppState {
     userInfo: IUserInfoState;
 }
 
+export interface ISessionInfo {
+    _id: string;
+    name: string;
+    imageUrl: string;
+    date: string;
+    description: string;
+    climbed: ISessionInfoClimbedTotals;
+}
+
+export interface ISessionInfoClimbedTotals {
+    lead: number;
+    boulder: number;
+    topRope: number;
+    speed: number;
+}
+
+export interface ISessionRecord {
+    _id: string;
+    userId: string;
+    date: string;
+    totals: ISessionInfoClimbedTotals;
+    comments: string;
+    climbed: {
+        [routeId: string]: ISessionRouteData
+    };
+}
+
+export interface IUserRecord {
+    _id: string;
+    name: string;
+    pictureUrl: string;
+}
+
+export interface ISessionRouteData {
+    routeId: string;
+    attempts: number;
+    completed: number;
+    comments: string;
+}
+
 // Classes
-export class SessionRouteData {
+export class SessionRouteData implements ISessionRouteData {
     routeId: string;
     attempts: number;
     completed: number;
