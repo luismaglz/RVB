@@ -1,5 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { DataService } from './data.service';
+import { IProfile, IAppState } from './models/all-models';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+
+import { GoogleTokenUtilities } from './helpers/google-token.helper';
 
 @Component({
   selector: 'app-root',
@@ -7,26 +12,15 @@ import { DataService } from './data.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  isLoggedIn = false;
-  token = null;
-  profile = null;
-  routeData = null;
+  ngOnInit() { }
 
-  ngOnInit() {}
 
-  logInSuccess(isLoggedIn: boolean) {
-    this.isLoggedIn = isLoggedIn;
+
+  onGapiLoad() {
+    GoogleTokenUtilities.appStart();
   }
 
-  onToken(token: string) {
-    this.token = token;
-  }
-
-  onProfile(profile: any) {
-    this.profile = profile;
-  }
-
-  constructor() {
-
+  constructor(ngZone: NgZone, private _dataService: DataService, private store: Store<IAppState>) {
+    window['onGapiLoad'] = (user) => ngZone.run(() => this.onGapiLoad());
   }
 }

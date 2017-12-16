@@ -5,7 +5,6 @@ import { DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-
 import { ISessionInfo, ISessionInfoClimbedTotals, IAppState } from '../../models/all-models';
 
 @Component({
@@ -19,6 +18,7 @@ export class HomeComponent implements OnInit {
 
   getSessions() {
     this.store.select(store => store.userInfo.token)
+      .filter(t => !!t)
       .subscribe(token => {
         this._dataService.getSessions(token).subscribe(sessions => {
           if (!sessions) { return null; }

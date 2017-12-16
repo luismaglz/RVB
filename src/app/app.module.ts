@@ -17,11 +17,14 @@ import { RateComponent } from './components/rate/rate.component';
 import { HomeComponent } from './components/home/home.component';
 import { SessionHeaderComponent } from './components/session-header/session-header.component';
 
-//Redux
+// Rxjs
+import '../app/helpers/rxjs-operators';
+
+// Redux
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-//Reducers
+// Reducers
 import { userInfoReducer } from './store/reducers';
 import { MainLoginComponent } from './components/login/main-login/main-login.component';
 
