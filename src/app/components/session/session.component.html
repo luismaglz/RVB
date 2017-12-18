@@ -1,67 +1,28 @@
 <app-session-header (sessionCompleted)="completeSession($event)"></app-session-header>
-<div *ngIf="dataSource" class="example-container mat-elevation-z8">
-  <div class="route-filter">
-    <mat-chip-list>
-      <mat-chip color="primary" selected="true">All</mat-chip>
-      <mat-chip color="primary" selected="true">Boulder</mat-chip>
-      <mat-chip color="primary" selected="true">Lead</mat-chip>
-      <mat-chip color="primary" selected="true">Top-Rope</mat-chip>
-    </mat-chip-list>
-  </div>
-  <div class="route-filter">
-    <mat-chip-list>
-      <mat-chip color="accent" selected="true">All</mat-chip>
-      <mat-chip color="accent" selected="true">Zone 1</mat-chip>
-      <mat-chip color="accent" selected="true">Zone 2</mat-chip>
-      <mat-chip color="accent" selected="true">Zone 3</mat-chip>
-      <mat-chip color="accent" selected="true">Zone 4</mat-chip>
-    </mat-chip-list>
-  </div>
-  <mat-table #table [dataSource]="dataSource">
-    <ng-container matColumnDef="grade">
-      <mat-header-cell color="primary" *matHeaderCellDef>Route</mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <div class="route-info-container">
-          <div class="color-cell" [style.background-color]="'#' + element.color"></div>
-          <div class="text-cell">
-            <div class="route-grade">
-              G: {{element.grade}}
-            </div>
-            <div class="route-setter">
-              S: {{element.setter}}
-            </div>
-          </div>
-        </div>
-      </mat-cell>
-    </ng-container>
 
-    <ng-container matColumnDef="attempt">
-      <mat-header-cell color="primary" *matHeaderCellDef>attempt</mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <i class="fa fa-angle-double-down control-icon remove" aria-hidden="true" (click)="removeAttempt(element._id)"></i>
-        <span class="route-counter">{{getAttempts(element._id)}}</span>
-        <i class="fa fa-angle-double-up control-icon add" aria-hidden="true" (click)="addAttempt(element._id)"></i>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="complete">
-      <mat-header-cell color="primary" *matHeaderCellDef>complete</mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <i class="fa fa-angle-double-down control-icon remove" aria-hidden="true" (click)="removeComplete(element._id)"></i>
-        <span class="route-counter">{{getCompleted(element._id)}}</span>
-        <i class="fa fa-angle-double-up control-icon add" aria-hidden="true" (click)="addComplete(element._id)"></i>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="rate">
-      <mat-header-cell color="primary" *matHeaderCellDef>rate</mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <app-rate [routeId]="element.id" class="rate-component"></app-rate>
-      </mat-cell>
-    </ng-container>
-
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row class="session-row" *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
-</div>
+<mat-accordion *ngIf="routeData">
+  <mat-expansion-panel *ngFor="let route of routeData">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{route.grade}}</mat-panel-title>
+      <mat-panel-description> {{route.setter}} </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="route-controls">
+      <div class="route-controls-attempt">
+        <button mat-raised-button color="primary">
+          <i class="fa fa-plus-square" aria-hidden="true"></i>Attempt</button>
+        <button mat-raised-button color="warn">
+          <i class="fa fa-minus-square-o" aria-hidden="true"></i>Attempt</button>
+      </div>
+      <div class="route-controls-send">
+        <button mat-raised-button color="primary">
+          <i class="fa fa-plus-square" aria-hidden="true"></i>Send</button>
+        <button mat-raised-button color="warn">
+          <i class="fa fa-minus-square-o" aria-hidden="true"></i>Send</button>
+      </div>
+      <!-- <div class="route-controls-rate">
+            <button mat-raised-button color="primary">Primary</button>
+            <button mat-raised-button color="warn">Warn</button>
+          </div> -->
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

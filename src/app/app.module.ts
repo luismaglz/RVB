@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule, MatChipsModule, MatTabsModule, MatCardModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule, MatChipsModule, MatTabsModule, MatCardModule, MatExpansionModule } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 
 // Import the Http Module and our Data Service
@@ -47,6 +47,7 @@ const appRoutes: Routes = [
     MatTabsModule,
     MatCardModule,
     MatCheckboxModule,
+    MatExpansionModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }

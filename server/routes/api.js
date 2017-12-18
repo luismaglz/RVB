@@ -31,7 +31,7 @@ var response = {
 // Get routes for gym
 router.get('/routes', function (req, res) {
     connection(function (db) {
-        db.collection('gym_1').find({})
+        db.collection('routes').find({})
             .toArray()
             .then(function (routes) {
             response.data = routes;

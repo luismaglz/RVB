@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
 import { DataService } from '../../data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SessionRouteData, SessionRouteDataDictionary, IRouteData } from '../../models/all-models';
@@ -10,10 +9,7 @@ import { SessionRouteData, SessionRouteDataDictionary, IRouteData } from '../../
   styleUrls: ['./session.component.scss']
 })
 export class SessionComponent implements OnInit {
-  @Input() routeData: Array<IRouteData>;
-
-  dataSource = null;
-  displayedColumns = ['grade', 'attempt', 'complete', 'rate'];
+  routeData: Array<IRouteData>;
   currentSessionData: SessionRouteDataDictionary = new SessionRouteDataDictionary();
 
   ngOnInit() {
@@ -28,8 +24,9 @@ export class SessionComponent implements OnInit {
 
   getRoutes() {
     this._dataService.getRoutes().subscribe(routeData => {
+      debugger;
       if (!routeData) { return null; }
-      this.dataSource = new MatTableDataSource<IRouteData>(routeData);
+      this.routeData = routeData;
     });
   }
 
