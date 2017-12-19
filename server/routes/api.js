@@ -134,12 +134,40 @@ function updateUser(userId, name, pictureUrl, res) {
 }
 function addSession(userId, routes, res) {
     var date = Date.now();
+    var totals = {
+        lead: 0,
+        boulder: 0,
+        topRope: 0,
+        speed: 0
+    };
+    for (var routeId in routes) {
+        if (routes.hasOwnProperty(routeId)) {
+            var route = routes[routeId];
+            switch (route.type) {
+                case 0:
+                    totals.boulder++;
+                    break;
+                case 1:
+                    totals.lead++;
+                    break;
+                case 2:
+                    totals.topRope++;
+                    break;
+                case 3:
+                    totals.speed++;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
     connection(function (db) {
         db.collection('sessions')
             .insertOne({
             userId: userId,
             date: date,
-            session: routes
+            session: routes,
+            totals: totals
         })
             .then(function (result) {
             response.data = result;

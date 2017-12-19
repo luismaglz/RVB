@@ -1,57 +1,38 @@
-.route-filter{
-    padding:5px 10px;
-}
-
-.control-icon{
-    font-size:24px;
-    transition:all 0.1s;
-    &.add{
-        color:green;
+.route-expansion-panel{
+    mat-expansion-panel-header{
+        cursor: pointer;
     }
-    &.remove{
-        color:red;
+
+    .grade{
+        width:45px;
     }
-}
 
-.route-counter{
-    font-size: 24px;
-    font-weight: bold;
-    width:30px;
-    display: inline-block;
-    text-align: center;
-}
-
-mat-row.session-row{
-    padding: 0 10px;
-}
-
-
-mat-header-cell{
-    text-transform: uppercase;
-    font-weight: bold;
-}
-.route-info-container{
-    display: flex;
-    flex-direction: row;
-    .color-cell{
-        display: inline-flex;
-        flex:1 1 20%;
-        min-width: 15px;
-    }
-    .text-cell{
-        display: inline-flex;
-        flex-direction: column;
-        flex: 5 5 80%;
+    .setter{
+        width:125px;
         margin-left:10px;
-        .route-grade, .route-setter{
-            display: flex;
-            flex:1 1 100%;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+    }
+
+    .route-controls{
+        display: block;
+        .route-controls-attempt, .route-controls-send{
+            display: inline-block;
+            button.mat-raised-button{
+                display: block;
+                width:100px;
+                margin-top:10px;
+                cursor:pointer;
+                &:first-child{
+                    margin-top:0;
+                }
+                .fa{
+                    font-size:20px;
+                    margin-right:10px;
+                }
+            }
+        }
+
+        .route-controls-send{
+            margin-left:5px;
         }
     }
-}
-
-.rate-component{
-    max-width:80px;
 }

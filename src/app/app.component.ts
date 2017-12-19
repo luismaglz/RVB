@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { GoogleTokenUtilities } from './helpers/google-token.helper';
+import * as UserInfoActions from './store/actions';
 
 @Component({
   selector: 'app-root',
@@ -14,10 +15,24 @@ import { GoogleTokenUtilities } from './helpers/google-token.helper';
 export class AppComponent implements OnInit {
   ngOnInit() { }
 
-
-
   onGapiLoad() {
-    GoogleTokenUtilities.appStart();
+    GoogleTokenUtilities.appStart(this.onGoogleUser.bind(this));
+  }
+
+  onGoogleUser(googleUser) {
+    if (googleUser) {
+      const profile = googleUser.getBasicProfile();
+      const userToken = googleUser.getAuthResponse().id_token;
+
+      const profileInfo = {
+        name: profile.getName(),
+        imageUrl: profile.getImageUrl()
+      } as IProfile;
+      this._dataService.updateUserInformation(userToken, profileInfo.name, profileInfo.imageUrl).subscribe(data => {
+        this.store.dispatch(new UserInfoActions.SetProfile(profileInfo));
+        this.store.dispatch(new UserInfoActions.SetToken(userToken));
+      });
+    }
   }
 
   constructor(ngZone: NgZone, private _dataService: DataService, private store: Store<IAppState>) {

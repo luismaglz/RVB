@@ -69,12 +69,14 @@ export class SessionRouteData implements ISessionRouteData {
     attempts: number;
     completed: number;
     comments: string;
+    type: number;
 
-    constructor(routeId: string) {
+    constructor(routeId: string, type: number) {
         this.routeId = routeId;
         this.attempts = 0;
         this.completed = 0;
         this.comments = null;
+        this.type = type;
     }
 
     addAttempt() {

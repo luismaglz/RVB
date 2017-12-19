@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DataService } from '../../data.service';
 import { DatePipe } from '@angular/common';
 
@@ -14,16 +14,13 @@ import { ISessionInfo, ISessionInfoClimbedTotals, IAppState } from '../../models
 })
 export class HomeComponent implements OnInit {
 
-  sessions = new Array<ISessionInfo>();
+  sessions: Observable<any>;
 
   getSessions() {
     this.store.select(store => store.userInfo.token)
       .filter(t => !!t)
       .subscribe(token => {
-        this._dataService.getSessions(token).subscribe(sessions => {
-          if (!sessions) { return null; }
-          this.sessions = sessions;
-        });
+        this.sessions = this._dataService.getSessions(token);
       });
   }
 

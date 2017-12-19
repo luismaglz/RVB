@@ -1,14 +1,15 @@
 <app-current-user></app-current-user>
-<mat-tab-group>
-    <mat-tab label="NewsFeed">
-        <ng-template [ngIf]="sessions">
-            <mat-card *ngFor="let session of sessions" [attr.sessionId]="_id" class="session-card">
+    <mat-tab-group class="home-page-tabs">
+        <mat-tab label="NewsFeed">
+            <mat-card *ngFor="let session of sessions | async" [attr.sessionId]="session._id" class="session-card">
                 <mat-card-header>
                     <div mat-card-avatar class="header-image" [style.background-image]="'url(' + session.imageUrl + ')'"></div>
                     <mat-card-title>
                         <span class="user-name">{{session.name}}</span>
                     </mat-card-title>
-                    <mat-card-subtitle><span class="session-date">{{session.date | date:'fullDate'}}</span></mat-card-subtitle>
+                    <mat-card-subtitle>
+                        <span class="session-date">{{session.date | date:'fullDate'}}</span>
+                    </mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content *ngIf="session.climbed" class="route-totals">
                     <div *ngIf="session.climbed.lead > 0" class="route-total">
@@ -29,9 +30,8 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Explore">
-        <!-- <app-route-tracker *ngIf="routeData" [token]="token" [routeData]="routeData"></app-route-tracker> -->
-    </mat-tab>
-</mat-tab-group>
+        </mat-tab>
+        <mat-tab label="Explore">
+            <!-- <app-route-tracker *ngIf="routeData" [token]="token" [routeData]="routeData"></app-route-tracker> -->
+        </mat-tab>
+    </mat-tab-group>

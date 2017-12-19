@@ -1,44 +1,55 @@
+:host /deep/ .mat-tab-group.home-page-tabs {
+    mat-tab-header.mat-tab-header {
+        top: 56px;
+        width: 100%;
+        z-index: 1000;
+        background-color: #fff;
+        position:fixed;
+    }
+    .mat-tab-body-wrapper {
+        margin-top: 104px;
+    }
+}
 
-  .mat-card.session-card{
+.mat-card.session-card {
     display: flex;
     flex-direction: column;
-    flex:1 1 100%;
-    margin:0 10px 10px 10px;
-    &:first-child{
-      margin-top:10px;
+    flex: 1 1 100%;
+    margin: 0 10px 10px 10px;
+    &:first-child {
+        margin-top: 10px;
     }
     .header-image {
-      background-size: cover;
+        background-size: cover;
     }
-    .route-totals{
-      display: flex;
-      flex-direction: row;
-      .route-total{
-        display: inline-block;
-        margin-left:10px;
-        width:100px;
-        &:first-child{
-          margin-left:0;
+    .route-totals {
+        display: flex;
+        flex-direction: row;
+        .route-total {
+            display: inline-block;
+            margin-left: 10px;
+            width: 100px;
+            &:first-child {
+                margin-left: 0;
+            }
+            .route-total-title {
+                display: block;
+                padding: 5px;
+                width: 100%;
+                text-transform: uppercase;
+                color: #fff;
+                background-color: #5498FF;
+                text-align: center;
+            }
+            .route-total-number {
+                display: block;
+                font-size: 28px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #f1f1f1;
+                padding: 5px;
+                width: 100%;
+            }
         }
-        .route-total-title{
-          display: block;
-          padding:5px;
-          width:100%;
-          text-transform: uppercase;
-          color:#fff;
-          background-color:#5498FF;
-          text-align: center;
-        }
-        .route-total-number{
-          display: block;
-          font-size:28px;
-          font-weight: bold;
-          text-align: center;
-          background-color:#f1f1f1;
-          padding:5px;
-          width:100%;
-        }
-      }
     }
-  }
-  
+}

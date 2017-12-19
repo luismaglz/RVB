@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // Classes
 var SessionRouteData = /** @class */ (function () {
-    function SessionRouteData(routeId) {
+    function SessionRouteData(routeId, type) {
         this.routeId = routeId;
         this.attempts = 0;
         this.completed = 0;
         this.comments = null;
+        this.type = type;
     }
     SessionRouteData.prototype.addAttempt = function () {
         this.attempts++;

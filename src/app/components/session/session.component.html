@@ -1,22 +1,28 @@
 <app-session-header (sessionCompleted)="completeSession($event)"></app-session-header>
 
 <mat-accordion *ngIf="routeData">
-  <mat-expansion-panel *ngFor="let route of routeData">
+  <mat-expansion-panel *ngFor="let route of routeData" class="route-expansion-panel">
     <mat-expansion-panel-header>
-      <mat-panel-title>{{route.grade}}</mat-panel-title>
-      <mat-panel-description> {{route.setter}} </mat-panel-description>
+      <mat-panel-title>
+        <span class="grade">{{route.grade}}</span>
+        <span class="setter">{{route.setter}}</span>
+      </mat-panel-title>
+      <mat-panel-description>
+        <span>A:{{getAttempts(route._id)}}</span> |
+        <span>S:{{getCompleted(route._id)}}</span>
+      </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="route-controls">
       <div class="route-controls-attempt">
-        <button mat-raised-button color="primary">
+        <button mat-raised-button color="primary" (click)="addAttempt(route._id, route.type)">
           <i class="fa fa-plus-square" aria-hidden="true"></i>Attempt</button>
-        <button mat-raised-button color="warn">
+        <button mat-raised-button color="warn" (click)="removeAttempt(route._id)">
           <i class="fa fa-minus-square-o" aria-hidden="true"></i>Attempt</button>
       </div>
       <div class="route-controls-send">
-        <button mat-raised-button color="primary">
+        <button mat-raised-button color="primary" (click)="addComplete(route._id, route.type)">
           <i class="fa fa-plus-square" aria-hidden="true"></i>Send</button>
-        <button mat-raised-button color="warn">
+        <button mat-raised-button color="warn" (click)="removeComplete(route._id)">
           <i class="fa fa-minus-square-o" aria-hidden="true"></i>Send</button>
       </div>
       <!-- <div class="route-controls-rate">

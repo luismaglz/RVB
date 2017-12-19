@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const GoogleAuth = require('google-auth-library');
 
-import { AddSessionRequest, UserInfoRequest, ISessionRecord, IUserRecord, ISessionInfo } from './server-models';
+import { AddSessionRequest, UserInfoRequest, ISessionRecord, IUserRecord, ISessionInfo, SessionRouteDataDictionary } from './server-models';
 
 const uri = "mongodb://luismaglz:tocopan88@route-test-cluster-shard-00-00-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-01-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Route-Test-Cluster-shard-0&authSource=admin";
 const clientId = '832252046561-m4te28o0t69e40r0nl1tuddu59h6q7er.apps.googleusercontent.com';
@@ -157,14 +157,45 @@ function updateUser(userId: string, name: string, pictureUrl: string, res) {
     });
 }
 
-function addSession(userId, routes, res) {
+function addSession(userId, routes: SessionRouteDataDictionary, res) {
     const date = Date.now();
+    const totals = {
+        lead: 0,
+        boulder: 0,
+        topRope: 0,
+        speed: 0
+    };
+
+    for (const routeId in routes) {
+        if (routes.hasOwnProperty(routeId)) {
+            const route = routes[routeId];
+
+            switch (route.type) {
+                case 0:
+                    totals.boulder++;
+                    break;
+                case 1:
+                    totals.lead++;
+                    break;
+                case 2:
+                    totals.topRope++;
+                    break;
+                case 3: totals.speed++;
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    }
+
     connection((db) => {
         db.collection('sessions')
             .insertOne({
                 userId: userId,
                 date: date,
-                session: routes
+                session: routes,
+                totals: totals
             })
             .then(function (result) {
                 response.data = result;

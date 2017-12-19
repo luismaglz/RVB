@@ -17,6 +17,14 @@ export class SessionComponent implements OnInit {
   }
 
   completeSession() {
+    for (const routeId in this.currentSessionData) {
+      if (this.currentSessionData.hasOwnProperty(routeId)) {
+        const route = this.currentSessionData[routeId];
+        if (route.attempts === 0 && route.completed === 0) {
+          delete route[routeId];
+        }
+      }
+    }
     this._dataService.completeSession(this.currentSessionData).subscribe(response => {
       this.router.navigate(['home']);
     });
@@ -24,7 +32,6 @@ export class SessionComponent implements OnInit {
 
   getRoutes() {
     this._dataService.getRoutes().subscribe(routeData => {
-      debugger;
       if (!routeData) { return null; }
       this.routeData = routeData;
     });
@@ -44,32 +51,30 @@ export class SessionComponent implements OnInit {
     return 0;
   }
 
-  addAttempt(routeId: string): void {
+  addAttempt(routeId: string, type: number): void {
     if (!this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+      this.currentSessionData[routeId] = new SessionRouteData(routeId, type);
     }
     this.currentSessionData[routeId].addAttempt();
   }
 
-  removeAttempt(routeId: string): void {
-    if (!this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+  removeAttempt(routeId: string, type: number): void {
+    if (this.currentSessionData[routeId]) {
+      this.currentSessionData[routeId].removeAttempt();
     }
-    this.currentSessionData[routeId].removeAttempt();
   }
 
-  addComplete(routeId: string): void {
+  addComplete(routeId: string, type: number): void {
     if (!this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+      this.currentSessionData[routeId] = new SessionRouteData(routeId, type);
     }
     this.currentSessionData[routeId].addCompleted();
   }
 
   removeComplete(routeId: string): void {
-    if (!this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId] = new SessionRouteData(routeId);
+    if (this.currentSessionData[routeId]) {
+      this.currentSessionData[routeId].removeCompleted();
     }
-    this.currentSessionData[routeId].removeCompleted();
   }
 
   constructor(private _dataService: DataService, private route: ActivatedRoute,

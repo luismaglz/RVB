@@ -17,7 +17,6 @@ import { IAppState, IProfile } from '../../../models/all-models';
 
 export class GoogleLoginComponent {
   onSignIn(googleUser) {
-    const token = googleUser.getAuthResponse().id_token;
     const profile = googleUser.getBasicProfile();
     const userToken = googleUser.getAuthResponse().id_token;
 
