@@ -7,7 +7,7 @@ const GoogleAuth = require('google-auth-library');
 import { AddSessionRequest, UserInfoRequest, ISessionRecord, IUserRecord, ISessionInfo, SessionRouteDataDictionary } from './server-models';
 
 const uri = "mongodb://luismaglz:tocopan88@route-test-cluster-shard-00-00-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-01-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Route-Test-Cluster-shard-0&authSource=admin";
-const clientId = '832252046561-0ffsre3lhksflugj7r1s2teaojt6950j.apps.googleusercontent.com';
+const clientId = '663414328102-hajhpv1hv41q1nqqolct865ddsln8g75.apps.googleusercontent.com';
 
 // Connect
 const connection = (closure) => {
