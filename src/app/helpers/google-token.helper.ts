@@ -8,7 +8,7 @@ export class GoogleTokenUtilities {
 
     private static initSigninV2(callback: Function) {
         GoogleTokenUtilities.auth2 = gapi.auth2.init({
-            client_id: '832252046561-m4te28o0t69e40r0nl1tuddu59h6q7er.apps.googleusercontent.com',
+            client_id: '832252046561-0ffsre3lhksflugj7r1s2teaojt6950j.apps.googleusercontent.com',
             scope: 'profile'
         });
 
