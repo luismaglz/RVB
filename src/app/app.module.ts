@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule, MatChipsModule, MatTabsModule, MatCardModule, MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
 
 // Import the Http Module and our Data Service
 import { HttpModule } from '@angular/http';
@@ -16,6 +17,7 @@ import { SessionComponent } from './components/session/session.component';
 import { RateComponent } from './components/rate/rate.component';
 import { HomeComponent } from './components/home/home.component';
 import { SessionHeaderComponent } from './components/session-header/session-header.component';
+import { MainLoginComponent } from './components/login/main-login/main-login.component';
 
 // Rxjs
 import '../app/helpers/rxjs-operators';
@@ -26,10 +28,13 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 // Reducers
 import { userInfoReducer } from './store/reducers';
-import { MainLoginComponent } from './components/login/main-login/main-login.component';
+import { sessionReducer } from './store/reducers/session.reducer';
+
+// Effects
+import { SessionEffects} from './store/effects/session.effects';
 
 const appRoutes: Routes = [
-  { path: '', component: MainLoginComponent },
+  { path: '', component: MainLoginComponent},
   { path: 'home', component: HomeComponent },
   { path: 'session', component: SessionComponent },
   { path: '**', component: AppComponent }
@@ -53,8 +58,12 @@ const appRoutes: Routes = [
       appRoutes,
       { enableTracing: true }
     ),
+    EffectsModule.forRoot([
+      SessionEffects
+    ]),
     StoreModule.forRoot({
-      userInfo: userInfoReducer
+      userInfo: userInfoReducer,
+      session: sessionReducer
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25

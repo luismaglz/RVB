@@ -27,7 +27,7 @@ export class GoogleLoginComponent {
     this._dataService.updateUserInformation(userToken, profileInfo.name, profileInfo.imageUrl).subscribe(data => {
       this.store.dispatch(new UserInfoActions.SetProfile(profileInfo));
       this.store.dispatch(new UserInfoActions.SetToken(userToken));
-      this.router.navigate(['home']);
+      this.router.navigate(['home'], { skipLocationChange: true });
     });
 
   }

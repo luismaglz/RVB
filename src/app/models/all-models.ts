@@ -23,6 +23,7 @@ export interface IUserInfoState {
 
 export interface IAppState {
     userInfo: IUserInfoState;
+    session: ISessionState;
 }
 
 export interface ISessionInfo {
@@ -32,6 +33,10 @@ export interface ISessionInfo {
     date: string;
     description: string;
     climbed: ISessionInfoClimbedTotals;
+}
+
+export interface ISessionState {
+    session: SessionRouteDataDictionary;
 }
 
 export interface ISessionInfoClimbedTotals {

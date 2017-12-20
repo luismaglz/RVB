@@ -17,7 +17,7 @@ const connection = (closure) => {
         }
         closure(db);
     });
-    
+
 };
 
 
@@ -41,10 +41,28 @@ router.get('/routes', (req, res) => {
         db.collection('routes').find({})
             .toArray()
             .then((routes) => {
-                response.data = routes;
+                const filters: { [type: string]: Array<string> } = {};
+                for (const route of routes) {
+                    const routeType = getRouteTypeName(route.type);
+                    if (!filters[routeType]) {
+                        filters[routeType] = new Array<string>();
+                    }
+                    if (filters[routeType].indexOf(route.grade) === -1) {
+                        filters[routeType].push(route.grade);
+                    }
+                }
+
+                const routesWithFilter = {
+                    filters: filters,
+                    routes: routes
+                };
+
+                response.data = [routesWithFilter];
                 res.json(response);
+                db.close();
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });
@@ -71,9 +89,11 @@ router.post('/routes', (req, res) => {
     connection((db) => {
         db.collection('gym_1').insertMany([])
             .then(function (result) {
+                db.close();
                 return result;
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });
@@ -81,6 +101,11 @@ router.post('/routes', (req, res) => {
 
 
 // Helper methods
+
+function getRouteTypeName(routeType: number) {
+    const routeTypes = ['boulder', 'lead', 'top rope', 'speed']
+    return routeTypes[routeType];
+}
 
 function verifyToken(res, token: string, callback: Function, data) {
     const auth = new GoogleAuth;
@@ -106,6 +131,7 @@ function findOrAddUser(userId: string, userInfoRequest: UserInfoRequest, res) {
     connection((db) => {
         db.collection('users').findOne({ _id: userId })
             .then((user) => {
+                db.close();
                 if (user) {
                     if (user.name === userInfoRequest.name && user.pictureUrl === userInfoRequest.pictureUrl) {
                         response.data = [];
@@ -118,6 +144,7 @@ function findOrAddUser(userId: string, userInfoRequest: UserInfoRequest, res) {
                 }
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });
@@ -132,10 +159,12 @@ function addUser(userId: string, name: string, pictureUrl: string, res) {
                 pictureUrl: pictureUrl
             })
             .then(function (result) {
+                db.close();
                 response.data = [];
                 res.json(response);
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });
@@ -150,9 +179,11 @@ function updateUser(userId: string, name: string, pictureUrl: string, res) {
             { upsert: true }
             )
             .then(function (result) {
+                db.close();
                 res.json(response);
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });
@@ -199,10 +230,12 @@ function addSession(userId, routes: SessionRouteDataDictionary, res) {
                 totals: totals
             })
             .then(function (result) {
+                db.close();
                 response.data = result;
                 res.json(response);
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });
@@ -212,12 +245,15 @@ function getSessions(userId, data, res) {
     connection((db) => {
         db.collection('sessions')
             .find()
+            .sort({ date: -1 })
             .limit(10)
             .toArray()
             .then((sessions) => {
+                db.close();
                 populateSessions(sessions, res);
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });
@@ -244,10 +280,12 @@ function populateSessions(sessions: Array<ISessionRecord>, res) {
                         climbed: session.totals
                     } as ISessionInfo;
                 });
+                db.close();
                 response.data = populatedSessions;
                 res.json(response);
             })
             .catch((err) => {
+                db.close();
                 sendError(err, res);
             });
     });

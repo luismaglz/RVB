@@ -34,10 +34,27 @@ router.get('/routes', function (req, res) {
         db.collection('routes').find({})
             .toArray()
             .then(function (routes) {
-            response.data = routes;
+            var filters = {};
+            for (var _i = 0, routes_1 = routes; _i < routes_1.length; _i++) {
+                var route = routes_1[_i];
+                var routeType = getRouteTypeName(route.type);
+                if (!filters[routeType]) {
+                    filters[routeType] = new Array();
+                }
+                if (filters[routeType].indexOf(route.grade) === -1) {
+                    filters[routeType].push(route.grade);
+                }
+            }
+            var routesWithFilter = {
+                filters: filters,
+                routes: routes
+            };
+            response.data = [routesWithFilter];
             res.json(response);
+            db.close();
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });
@@ -59,14 +76,20 @@ router.post('/routes', function (req, res) {
     connection(function (db) {
         db.collection('gym_1').insertMany([])
             .then(function (result) {
+            db.close();
             return result;
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });
 });
 // Helper methods
+function getRouteTypeName(routeType) {
+    var routeTypes = ['boulder', 'lead', 'top rope', 'speed'];
+    return routeTypes[routeType];
+}
 function verifyToken(res, token, callback, data) {
     var auth = new GoogleAuth;
     var client = new auth.OAuth2(clientId, '', '');
@@ -85,6 +108,7 @@ function findOrAddUser(userId, userInfoRequest, res) {
     connection(function (db) {
         db.collection('users').findOne({ _id: userId })
             .then(function (user) {
+            db.close();
             if (user) {
                 if (user.name === userInfoRequest.name && user.pictureUrl === userInfoRequest.pictureUrl) {
                     response.data = [];
@@ -99,6 +123,7 @@ function findOrAddUser(userId, userInfoRequest, res) {
             }
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });
@@ -112,10 +137,12 @@ function addUser(userId, name, pictureUrl, res) {
             pictureUrl: pictureUrl
         })
             .then(function (result) {
+            db.close();
             response.data = [];
             res.json(response);
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });
@@ -125,9 +152,11 @@ function updateUser(userId, name, pictureUrl, res) {
         db.collection('users')
             .updateOne({ _id: userId }, { $set: { _id: userId, name: name, pictureUrl: pictureUrl } }, { upsert: true })
             .then(function (result) {
+            db.close();
             res.json(response);
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });
@@ -170,10 +199,12 @@ function addSession(userId, routes, res) {
             totals: totals
         })
             .then(function (result) {
+            db.close();
             response.data = result;
             res.json(response);
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });
@@ -182,12 +213,15 @@ function getSessions(userId, data, res) {
     connection(function (db) {
         db.collection('sessions')
             .find()
+            .sort({ date: -1 })
             .limit(10)
             .toArray()
             .then(function (sessions) {
+            db.close();
             populateSessions(sessions, res);
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });
@@ -213,10 +247,12 @@ function populateSessions(sessions, res) {
                     climbed: session.totals
                 };
             });
+            db.close();
             response.data = populatedSessions;
             res.json(response);
         })
             .catch(function (err) {
+            db.close();
             sendError(err, res);
         });
     });

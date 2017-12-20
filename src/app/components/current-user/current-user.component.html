@@ -4,8 +4,8 @@
     <span class="user-name">{{profile.name}}</span>
   </span>
   <span class="session-controls">
-    <a routerLink="/session" routerLinkActive="active">
-      <button mat-raised-button color="accent">Start Session</button>
+    <a routerLink="/session" skipLocationChange routerLinkActive="active">
+      <button mat-raised-button color="accent" (click)="startSession()">Start Session</button>
     </a>
   </span>
 </mat-toolbar>

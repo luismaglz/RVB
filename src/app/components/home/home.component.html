@@ -8,7 +8,7 @@
                         <span class="user-name">{{session.name}}</span>
                     </mat-card-title>
                     <mat-card-subtitle>
-                        <span class="session-date">{{session.date | date:'fullDate'}}</span>
+                        <span class="session-date">{{session.date | date:'medium'}}</span>
                     </mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content *ngIf="session.climbed" class="route-totals">

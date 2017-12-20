@@ -1,5 +1,5 @@
-<mat-toolbar color="primary">
-  <div class="session-controls">
-      <button mat-raised-button color="accent" (click)="completeSession()" >End Session</button>
-  </div>
+<mat-toolbar color="primary" class="session-toolbar">
+  <span class="stats-climbed">Climbed: {{totalClimbs}}</span>
+  <span class="stats-attempts">Attempts: {{totalAttempts}}</span>
+  <button mat-raised-button color="accent" (click)="completeSession()">End Session</button>
 </mat-toolbar>

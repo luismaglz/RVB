@@ -1,82 +1,74 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { DataService } from '../../data.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { SessionRouteData, SessionRouteDataDictionary, IRouteData } from '../../models/all-models';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { SessionRouteData, SessionRouteDataDictionary, IRouteData, IAppState } from '../../models/all-models';
+import * as  SessionActions from '../../store/actions/session.actions';
 
 @Component({
   selector: 'app-session',
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss']
 })
-export class SessionComponent implements OnInit {
+export class SessionComponent implements OnInit, OnDestroy {
   routeData: Array<IRouteData>;
-  currentSessionData: SessionRouteDataDictionary = new SessionRouteDataDictionary();
+  currentSessionData: SessionRouteDataDictionary;
+  subscriptions = new Array<Subscription>();
+  filters: { [type: number]: Array<string> };
+  routeTypes: Array<string>;
 
   ngOnInit() {
     this.getRoutes();
+    this.store.dispatch(new SessionActions.StartSession());
+    this.subscriptions.push(
+      this.store.select(state => state.session.session).subscribe(session => {
+        this.currentSessionData = session;
+      })
+    );
   }
 
-  completeSession() {
-    for (const routeId in this.currentSessionData) {
-      if (this.currentSessionData.hasOwnProperty(routeId)) {
-        const route = this.currentSessionData[routeId];
-        if (route.attempts === 0 && route.completed === 0) {
-          delete route[routeId];
-        }
-      }
-    }
-    this._dataService.completeSession(this.currentSessionData).subscribe(response => {
-      this.router.navigate(['home']);
-    });
-  }
-
-  getRoutes() {
-    this._dataService.getRoutes().subscribe(routeData => {
-      if (!routeData) { return null; }
-      this.routeData = routeData;
-    });
-  }
-
-  getAttempts(routeId: string): number {
-    if (this.currentSessionData[routeId]) {
-      return this.currentSessionData[routeId].attempts;
-    }
-    return 0;
-  }
-
-  getCompleted(routeId: string): number {
-    if (this.currentSessionData[routeId]) {
-      return this.currentSessionData[routeId].completed;
-    }
-    return 0;
+  ngOnDestroy() {
+    this.subscriptions.map(s => s.unsubscribe);
   }
 
   addAttempt(routeId: string, type: number): void {
-    if (!this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId] = new SessionRouteData(routeId, type);
-    }
-    this.currentSessionData[routeId].addAttempt();
+    this.store.dispatch(new SessionActions.AddAttempt({ routeId: routeId, type: type }));
   }
 
-  removeAttempt(routeId: string, type: number): void {
-    if (this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId].removeAttempt();
-    }
+  removeAttempt(routeId: string): void {
+    this.store.dispatch(new SessionActions.RemoveAttempt(routeId));
   }
 
   addComplete(routeId: string, type: number): void {
-    if (!this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId] = new SessionRouteData(routeId, type);
-    }
-    this.currentSessionData[routeId].addCompleted();
+    this.store.dispatch(new SessionActions.AddSend({ routeId: routeId, type: type }));
+
   }
 
   removeComplete(routeId: string): void {
-    if (this.currentSessionData[routeId]) {
-      this.currentSessionData[routeId].removeCompleted();
-    }
+    this.store.dispatch(new SessionActions.RemoveSend(routeId));
+
   }
 
-  constructor(private _dataService: DataService, private route: ActivatedRoute,
-    private router: Router) { }
+  getRoutes() {
+    this._dataService.getRoutes().filter(rwf => !!rwf).subscribe(routesWithFilters => {
+      if (routesWithFilters[0]) {
+        if (routesWithFilters[0].routes) {
+          this.routeData = [...routesWithFilters[0].routes];
+        }
+        // if (routesWithFilters[0].filters) {
+        //   this.filters = this.routeData = routesWithFilters[0].filters;
+        //   this.routeTypes = new Array<string>();
+        //   for (const routeType in this.filters) {
+        //     if (this.filters.hasOwnProperty(routeType)) {
+        //       this.routeTypes.push(routeType);
+        //     }
+        //   }
+        // }
+      }
+    });
+  }
+
+  constructor(private _dataService: DataService,
+    private store: Store<IAppState>) { }
 }

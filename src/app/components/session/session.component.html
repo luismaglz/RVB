@@ -1,5 +1,4 @@
-<app-session-header (sessionCompleted)="completeSession($event)"></app-session-header>
-
+<app-session-header></app-session-header>
 <mat-accordion *ngIf="routeData">
   <mat-expansion-panel *ngFor="let route of routeData" class="route-expansion-panel">
     <mat-expansion-panel-header>
@@ -7,9 +6,9 @@
         <span class="grade">{{route.grade}}</span>
         <span class="setter">{{route.setter}}</span>
       </mat-panel-title>
-      <mat-panel-description>
-        <span>A:{{getAttempts(route._id)}}</span> |
-        <span>S:{{getCompleted(route._id)}}</span>
+      <mat-panel-description *ngIf="currentSessionData[route._id]">
+        <span>A:{{currentSessionData[route._id].attempts}}</span> |
+        <span>S:{{currentSessionData[route._id].completed}}</span>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="route-controls">
