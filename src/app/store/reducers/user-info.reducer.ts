@@ -5,7 +5,8 @@ import { IUserInfoState } from '../../models/all-models';
 /// Default app state
 const defaultState: IUserInfoState = {
     profile: null,
-    token: null
+    token: null,
+    loading: false
 };
 
 /// Helper function to create new state object

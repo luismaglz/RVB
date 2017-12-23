@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule, MatChipsModule, MatTabsModule, MatCardModule, MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatTableModule, MatToolbarModule, MatChipsModule, MatTabsModule, MatCardModule, MatExpansionModule, MatProgressSpinnerModule, MatSelectModule } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 
@@ -27,16 +27,20 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 // Reducers
-import { userInfoReducer } from './store/reducers';
-import { sessionReducer } from './store/reducers/session.reducer';
+import { userInfoReducer, sessionReducer, gymsReducer, routesReducer } from './store/reducers';
 
 // Effects
-import { SessionEffects} from './store/effects/session.effects';
+import { SessionEffects } from './store/effects/session.effects';
+import { RoutesEffects } from './store/effects/routes.effects';
+import { GymEffects } from './store/effects/gym.effects';
+import { rootRenderNodes } from '@angular/core/src/view/util';
+import { GymSelectComponent } from './components/gym-select/gym-select.component';
 
 const appRoutes: Routes = [
-  { path: '', component: MainLoginComponent},
+  { path: '', component: MainLoginComponent },
   { path: 'home', component: HomeComponent },
   { path: 'session', component: SessionComponent },
+  { path: 'gym-select', component: GymSelectComponent },
   { path: '**', component: AppComponent }
 ];
 
@@ -54,16 +58,21 @@ const appRoutes: Routes = [
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatSelectModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
     ),
     EffectsModule.forRoot([
-      SessionEffects
+      SessionEffects,
+      RoutesEffects,
+      GymEffects
     ]),
     StoreModule.forRoot({
       userInfo: userInfoReducer,
-      session: sessionReducer
+      session: sessionReducer,
+      gyms: gymsReducer,
+      routes: routesReducer
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25
@@ -78,7 +87,8 @@ const appRoutes: Routes = [
     RateComponent,
     HomeComponent,
     SessionHeaderComponent,
-    MainLoginComponent
+    MainLoginComponent,
+    GymSelectComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

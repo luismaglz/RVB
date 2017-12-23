@@ -1,37 +1,44 @@
-.route-expansion-panel{
-    mat-expansion-panel-header{
+:host /deep/ {
+    div.mat-expansion-panel-content:not(.mat-expanded) {
+        height: 0px !important;
+        visibility: hidden !important;
+    }
+    .mat-expansion-panel-header {
+        height: 48px;
+    }
+}
+
+.route-expansion-panel {
+    mat-expansion-panel-header {
         cursor: pointer;
     }
-
-    .grade{
-        width:45px;
+    .grade {
+        width: 45px;
     }
-
-    .setter{
-        width:125px;
-        margin-left:10px;
+    .setter {
+        width: 125px;
+        margin-left: 10px;
     }
-
-    .route-controls{
+    .route-controls {
         display: block;
-        .route-controls-attempt, .route-controls-send{
+        .route-controls-attempt,
+        .route-controls-send {
             display: inline-block;
-            button.mat-raised-button{
+            button.mat-raised-button {
                 display: block;
-                margin-top:10px;
-                cursor:pointer;
-                &:first-child{
-                    margin-top:0;
+                margin-top: 10px;
+                cursor: pointer;
+                &:first-child {
+                    margin-top: 0;
                 }
-                .fa{
-                    font-size:20px;
-                    margin-right:10px;
+                .fa {
+                    font-size: 20px;
+                    margin-right: 10px;
                 }
             }
         }
-
-        .route-controls-send{
-            margin-left:5px;
+        .route-controls-send {
+            margin-left: 5px;
         }
     }
 }

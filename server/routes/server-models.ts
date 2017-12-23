@@ -63,6 +63,23 @@ export interface ISessionRouteData {
     comments: string;
 }
 
+export interface IRouteResponse {
+    gym: IGym;
+    routes: Array<IRouteData>;
+}
+
+export interface IGym {
+    _id: string;
+    name: string;
+    areas: Array<string>;
+    grades: {
+        boulder: Array<string>;
+        lead: Array<string>;
+        top: Array<string>;
+    };
+}
+
+
 // Classes
 export class SessionRouteData implements ISessionRouteData {
     routeId: string;

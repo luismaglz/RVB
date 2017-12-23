@@ -30,26 +30,47 @@ var response = {
 };
 // Get routes for gym
 router.get('/routes', function (req, res) {
+    var gymId = req.headers.gymid;
     connection(function (db) {
-        db.collection('routes').find({})
+        db.collection('routes')
+            .find({ gym: gymId })
             .toArray()
             .then(function (routes) {
-            var filters = {};
-            for (var _i = 0, routes_1 = routes; _i < routes_1.length; _i++) {
-                var route = routes_1[_i];
-                var routeType = getRouteTypeName(route.type);
-                if (!filters[routeType]) {
-                    filters[routeType] = new Array();
-                }
-                if (filters[routeType].indexOf(route.grade) === -1) {
-                    filters[routeType].push(route.grade);
-                }
-            }
-            var routesWithFilter = {
-                filters: filters,
-                routes: routes
-            };
-            response.data = [routesWithFilter];
+            response.data = routes;
+            res.json(response);
+            db.close();
+        })
+            .catch(function (err) {
+            db.close();
+            sendError(err, res);
+        });
+    });
+});
+// Gyms
+router.get('/gyms', function (req, res) {
+    connection(function (db) {
+        db.collection('gyms')
+            .find()
+            .toArray()
+            .then(function (gyms) {
+            response.data = gyms;
+            res.json(response);
+            db.close();
+        })
+            .catch(function (err) {
+            db.close();
+            sendError(err, res);
+        });
+    });
+});
+router.get('/gyms', function (req, res) {
+    var gymId = req.headers.gymid;
+    connection(function (db) {
+        db.collection('gyms')
+            .find({ _id: gymId })
+            .toArray()
+            .then(function (gym) {
+            response.data = gym;
             res.json(response);
             db.close();
         })

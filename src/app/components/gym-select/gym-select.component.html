@@ -1,0 +1,16 @@
+<h1>Please select a gym to start a session</h1>
+<h2>Saved Gyms</h2>
+<div class="favorite-gyms">
+  <mat-chip-list class="mat-chip-list-stacked">
+    <mat-chip color="accent" (click)="gymSelected('5a33213bc43cfd05bc10a6e6')">The Front SLC</mat-chip>
+  </mat-chip-list>
+</div>
+<h2>All Gyms</h2>
+<mat-form-field>
+  <mat-select placeholder="Gyms" (selectionChange)="gymSelected($event.value)">
+    <mat-option>Select a gym</mat-option>
+    <mat-option *ngFor="let gym of gyms|async" [value]="gym._id">
+      {{ gym.name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

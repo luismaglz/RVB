@@ -1,33 +1,35 @@
 <app-session-header></app-session-header>
-<mat-accordion *ngIf="routeData">
-  <mat-expansion-panel *ngFor="let route of routeData" class="route-expansion-panel">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <span class="grade">{{route.grade}}</span>
-        <span class="setter">{{route.setter}}</span>
-      </mat-panel-title>
-      <mat-panel-description *ngIf="currentSessionData[route._id]">
-        <span>A:{{currentSessionData[route._id].attempts}}</span> |
-        <span>S:{{currentSessionData[route._id].completed}}</span>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div class="route-controls">
-      <div class="route-controls-attempt">
-        <button mat-raised-button color="primary" (click)="addAttempt(route._id, route.type)">
-          <i class="fa fa-plus-square" aria-hidden="true"></i>Attempt</button>
-        <button mat-raised-button color="warn" (click)="removeAttempt(route._id)">
-          <i class="fa fa-minus-square-o" aria-hidden="true"></i>Attempt</button>
-      </div>
-      <div class="route-controls-send">
-        <button mat-raised-button color="primary" (click)="addComplete(route._id, route.type)">
-          <i class="fa fa-plus-square" aria-hidden="true"></i>Send</button>
-        <button mat-raised-button color="warn" (click)="removeComplete(route._id)">
-          <i class="fa fa-minus-square-o" aria-hidden="true"></i>Send</button>
-      </div>
-      <!-- <div class="route-controls-rate">
-            <button mat-raised-button color="primary">Primary</button>
-            <button mat-raised-button color="warn">Warn</button>
-          </div> -->
-    </div>
-  </mat-expansion-panel>
-</mat-accordion>
+<mat-tab-group>
+  <mat-tab *ngFor="let climbType of (gymClimbTypes|async);let i = index" [label]="climbType">
+    <mat-accordion>
+      <ng-container *ngFor="let route of (getRoutesByType(i)|async)">
+          <mat-expansion-panel class="route-expansion-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span class="grade">{{route.grade}}</span>
+                <span class="setter">{{route.setter}}</span>
+              </mat-panel-title>
+              <mat-panel-description *ngIf="currentSessionData[route._id]">
+                <span>A:{{currentSessionData[route._id].attempts}}</span> |
+                <span>S:{{currentSessionData[route._id].completed}}</span>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="route-controls">
+              <div class="route-controls-attempt">
+                <button mat-raised-button color="primary" (click)="addAttempt(route._id, route.type)">
+                  <i class="fa fa-plus-square" aria-hidden="true"></i>Attempt</button>
+                <button mat-raised-button color="warn" (click)="removeAttempt(route._id)">
+                  <i class="fa fa-minus-square-o" aria-hidden="true"></i>Attempt</button>
+              </div>
+              <div class="route-controls-send">
+                <button mat-raised-button color="primary" (click)="addComplete(route._id, route.type)">
+                  <i class="fa fa-plus-square" aria-hidden="true"></i>Send</button>
+                <button mat-raised-button color="warn" (click)="removeComplete(route._id)">
+                  <i class="fa fa-minus-square-o" aria-hidden="true"></i>Send</button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </mat-tab>
+</mat-tab-group>

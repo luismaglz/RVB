@@ -22,9 +22,25 @@ export class DataService {
       this.token = token;
     });
   }
-  // Routes 
-  getRoutes() {
-    return this._http.get('/api/routes')
+
+  // Gyms
+  getGyms() {
+    return this._http.get('/api/gyms')
+      .map(result => this.result = result.json().data);
+  }
+
+  getGymDetails(gymId: string) {
+    const requestOptions = new RequestOptions();
+    requestOptions.headers = new Headers({ gymid: gymId });
+    return this._http.get('/api/gyms', requestOptions)
+      .map(result => this.result = result.json().data);
+  }
+
+  // Routes
+  getRoutes(gymId: string) {
+    const requestOptions = new RequestOptions();
+    requestOptions.headers = new Headers({ gymid: gymId });
+    return this._http.get('/api/routes', requestOptions)
       .map(result => this.result = result.json().data);
   }
 

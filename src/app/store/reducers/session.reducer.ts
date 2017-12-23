@@ -5,7 +5,8 @@ import { ISessionState, SessionRouteDataDictionary, SessionRouteData } from '../
 
 /// Default app state
 const defaultState: ISessionState = {
-    session: new SessionRouteDataDictionary()
+    session: new SessionRouteDataDictionary(),
+    loading: false
 };
 
 /// Reducer function

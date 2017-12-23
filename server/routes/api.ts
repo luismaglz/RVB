@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const GoogleAuth = require('google-auth-library');
 
-import { AddSessionRequest, UserInfoRequest, ISessionRecord, IUserRecord, ISessionInfo, SessionRouteDataDictionary } from './server-models';
+import * as models from './server-models';
 
 const uri = "mongodb://luismaglz:tocopan88@route-test-cluster-shard-00-00-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-01-uxxuf.mongodb.net:27017,route-test-cluster-shard-00-02-uxxuf.mongodb.net:27017/test?ssl=true&replicaSet=Route-Test-Cluster-shard-0&authSource=admin";
 const clientId = '663414328102-hajhpv1hv41q1nqqolct865ddsln8g75.apps.googleusercontent.com';
@@ -19,7 +19,6 @@ const connection = (closure) => {
     });
 
 };
-
 
 // Error handling
 const sendError = (err, res) => {
@@ -37,27 +36,49 @@ const response = {
 
 // Get routes for gym
 router.get('/routes', (req, res) => {
+    const gymId = req.headers.gymid;
     connection((db) => {
-        db.collection('routes').find({})
+        db.collection('routes')
+            .find({ gym: gymId })
             .toArray()
             .then((routes) => {
-                const filters: { [type: string]: Array<string> } = {};
-                for (const route of routes) {
-                    const routeType = getRouteTypeName(route.type);
-                    if (!filters[routeType]) {
-                        filters[routeType] = new Array<string>();
-                    }
-                    if (filters[routeType].indexOf(route.grade) === -1) {
-                        filters[routeType].push(route.grade);
-                    }
-                }
+                response.data = routes;
+                res.json(response);
+                db.close();
+            })
+            .catch((err) => {
+                db.close();
+                sendError(err, res);
+            });
+    });
+});
 
-                const routesWithFilter = {
-                    filters: filters,
-                    routes: routes
-                };
+// Gyms
+router.get('/gyms', (req, res) => {
+    connection((db) => {
+        db.collection('gyms')
+            .find()
+            .toArray()
+            .then((gyms) => {
+                response.data = gyms;
+                res.json(response);
+                db.close();
+            })
+            .catch((err) => {
+                db.close();
+                sendError(err, res);
+            });
+    });
+});
 
-                response.data = [routesWithFilter];
+router.get('/gyms', (req, res) => {
+    const gymId = req.headers.gymid;
+    connection((db) => {
+        db.collection('gyms')
+            .find({ _id: gymId })
+            .toArray()
+            .then((gym) => {
+                response.data = gym;
                 res.json(response);
                 db.close();
             })
@@ -70,7 +91,7 @@ router.get('/routes', (req, res) => {
 
 // Sessions
 router.post('/session', (req, res) => {
-    const addSesssionRequest: AddSessionRequest = req.body;
+    const addSesssionRequest: models.AddSessionRequest = req.body;
     verifyToken(res, addSesssionRequest.token, addSession, addSesssionRequest.routes);
 });
 
@@ -80,10 +101,9 @@ router.get('/session', (req, res) => {
 
 // Users
 router.post('/user', (req, res) => {
-    const userInfoRequest: UserInfoRequest = req.body;
+    const userInfoRequest: models.UserInfoRequest = req.body;
     verifyToken(res, userInfoRequest.token, findOrAddUser, userInfoRequest);
 });
-
 
 router.post('/routes', (req, res) => {
     connection((db) => {
@@ -99,9 +119,7 @@ router.post('/routes', (req, res) => {
     });
 });
 
-
 // Helper methods
-
 function getRouteTypeName(routeType: number) {
     const routeTypes = ['boulder', 'lead', 'top rope', 'speed']
     return routeTypes[routeType];
@@ -127,7 +145,7 @@ function verifyToken(res, token: string, callback: Function, data) {
     return userId;
 }
 
-function findOrAddUser(userId: string, userInfoRequest: UserInfoRequest, res) {
+function findOrAddUser(userId: string, userInfoRequest: models.UserInfoRequest, res) {
     connection((db) => {
         db.collection('users').findOne({ _id: userId })
             .then((user) => {
@@ -189,7 +207,7 @@ function updateUser(userId: string, name: string, pictureUrl: string, res) {
     });
 }
 
-function addSession(userId, routes: SessionRouteDataDictionary, res) {
+function addSession(userId, routes: models.SessionRouteDataDictionary, res) {
     const date = Date.now();
     const totals = {
         lead: 0,
@@ -216,7 +234,6 @@ function addSession(userId, routes: SessionRouteDataDictionary, res) {
                     break;
                 default:
                     break;
-
             }
         }
     }
@@ -259,7 +276,7 @@ function getSessions(userId, data, res) {
     });
 }
 
-function populateSessions(sessions: Array<ISessionRecord>, res) {
+function populateSessions(sessions: Array<models.ISessionRecord>, res) {
     const users = Array.from(new Set(sessions.map(session => session.userId)));
     connection((db) => {
         db.collection('users')
@@ -268,7 +285,7 @@ function populateSessions(sessions: Array<ISessionRecord>, res) {
             })
             .limit(10)
             .toArray()
-            .then((userRecords: Array<IUserRecord>) => {
+            .then((userRecords: Array<models.IUserRecord>) => {
                 const populatedSessions = sessions.map(session => {
                     const user = userRecords.find(u => u._id === session.userId);
                     return {
@@ -278,7 +295,7 @@ function populateSessions(sessions: Array<ISessionRecord>, res) {
                         date: session.date,
                         description: session.comments,
                         climbed: session.totals
-                    } as ISessionInfo;
+                    } as models.ISessionInfo;
                 });
                 db.close();
                 response.data = populatedSessions;

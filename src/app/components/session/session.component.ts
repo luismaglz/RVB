@@ -3,33 +3,53 @@ import { DataService } from '../../data.service';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { SessionRouteData, SessionRouteDataDictionary, IRouteData, IAppState } from '../../models/all-models';
+import { SessionRouteData, SessionRouteDataDictionary, IRouteData, IAppState, IGym } from '../../models/all-models';
 import * as  SessionActions from '../../store/actions/session.actions';
+import * as  RoutesActions from '../../store/actions/routes.actions';
+import * as  GymActions from '../../store/actions/gym.actions';
 
 @Component({
   selector: 'app-session',
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss']
 })
-export class SessionComponent implements OnInit, OnDestroy {
-  routeData: Array<IRouteData>;
-  currentSessionData: SessionRouteDataDictionary;
-  subscriptions = new Array<Subscription>();
-  filters: { [type: number]: Array<string> };
-  routeTypes: Array<string>;
+export class SessionComponent implements OnInit {
+  routeData: Observable<Array<IRouteData>>;
+  gymData: Observable<IGym>;
+  gymAreas: Observable<Array<string>>;
+  gymClimbTypes: Observable<Array<string>>;
+  currentSessionData: SessionRouteDataDictionary = {};
 
   ngOnInit() {
-    this.getRoutes();
-    this.store.dispatch(new SessionActions.StartSession());
-    this.subscriptions.push(
-      this.store.select(state => state.session.session).subscribe(session => {
-        this.currentSessionData = session;
-      })
-    );
+    this.gymData = this.store.select(store => store.gyms.selectedGym);
+    this.gymAreas = this.store.select(store => {
+      if (store.gyms && store.gyms.selectedGym && store.gyms.selectedGym.areas) {
+        return store.gyms.selectedGym.areas;
+      }
+      return [];
+    });
+    this.gymClimbTypes = this.store.select(store => {
+      if (store.gyms && store.gyms.selectedGym && store.gyms.selectedGym.grades) {
+        const climbTypes = new Array<string>();
+        for (const gradeName in store.gyms.selectedGym.grades) {
+          if (store.gyms.selectedGym.grades.hasOwnProperty(gradeName)) {
+            climbTypes.push(gradeName);
+          }
+        }
+        return climbTypes;
+      }
+      return [];
+    });
+    this.routeData = this.store.select(store => store.routes.routes);
   }
 
-  ngOnDestroy() {
-    this.subscriptions.map(s => s.unsubscribe);
+  getRoutesByType(routeType: number) {
+    return this.store.select(store => {
+      if (store && store.routes && store.routes.routes) {
+        return store.routes.routes.filter(r => r.type === routeType);
+      }
+      return [];
+    });
   }
 
   addAttempt(routeId: string, type: number): void {
@@ -48,25 +68,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   removeComplete(routeId: string): void {
     this.store.dispatch(new SessionActions.RemoveSend(routeId));
 
-  }
-
-  getRoutes() {
-    this._dataService.getRoutes().filter(rwf => !!rwf).subscribe(routesWithFilters => {
-      if (routesWithFilters[0]) {
-        if (routesWithFilters[0].routes) {
-          this.routeData = [...routesWithFilters[0].routes];
-        }
-        // if (routesWithFilters[0].filters) {
-        //   this.filters = this.routeData = routesWithFilters[0].filters;
-        //   this.routeTypes = new Array<string>();
-        //   for (const routeType in this.filters) {
-        //     if (this.filters.hasOwnProperty(routeType)) {
-        //       this.routeTypes.push(routeType);
-        //     }
-        //   }
-        // }
-      }
-    });
   }
 
   constructor(private _dataService: DataService,

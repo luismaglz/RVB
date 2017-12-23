@@ -4,7 +4,7 @@ import { NumberSymbol } from "@angular/common/src/i18n/locale_data_api";
 export interface IRouteData {
     id: string;
     zone: string;
-    type: string;
+    type: number;
     grade: string;
     color: String;
     likes: string;
@@ -19,11 +19,25 @@ export interface IProfile {
 export interface IUserInfoState {
     profile: IProfile;
     token: string;
+    loading: boolean;
+}
+
+export interface IGymState {
+    gyms: Array<IBaseGym>;
+    selectedGym: IGym;
+    loading: boolean;
+}
+
+export interface IRoutesState {
+    routes: Array<IRouteData>;
+    loading: boolean;
 }
 
 export interface IAppState {
     userInfo: IUserInfoState;
     session: ISessionState;
+    gyms: IGymState;
+    routes: IRoutesState;
 }
 
 export interface ISessionInfo {
@@ -37,6 +51,7 @@ export interface ISessionInfo {
 
 export interface ISessionState {
     session: SessionRouteDataDictionary;
+    loading: boolean;
 }
 
 export interface ISessionInfoClimbedTotals {
@@ -44,6 +59,24 @@ export interface ISessionInfoClimbedTotals {
     boulder: number;
     topRope: number;
     speed: number;
+}
+
+export interface IRouteResponse {
+    gym: IGym;
+    routes: Array<IRouteData>;
+}
+export interface IBaseGym {
+    _id: string;
+    name: string;
+}
+
+export interface IGym extends IBaseGym {
+    areas: Array<string>;
+    grades: {
+        boulder: Array<string>;
+        lead: Array<string>;
+        top: Array<string>;
+    };
 }
 
 // Classes
