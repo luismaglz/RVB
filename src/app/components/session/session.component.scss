@@ -6,6 +6,10 @@
     .mat-expansion-panel-header {
         height: 48px;
     }
+
+    mat-chip.mat-chip, .mat-chip:not(.mat-basic-chip)+.mat-chip:not(.mat-basic-chip){
+        margin:5px 8px 0 0;
+    }
 }
 
 .route-expansion-panel {
@@ -20,25 +24,26 @@
         margin-left: 10px;
     }
     .route-controls {
-        display: block;
+        display: inline-block;
         .route-controls-attempt,
         .route-controls-send {
-            display: inline-block;
+            margin-top:5px;
+            display: block;
             button.mat-raised-button {
-                display: block;
-                margin-top: 10px;
+                min-width: 0px;
+                display: inline-block;
                 cursor: pointer;
                 &:first-child {
                     margin-top: 0;
                 }
                 .fa {
                     font-size: 20px;
-                    margin-right: 10px;
                 }
             }
         }
-        .route-controls-send {
-            margin-left: 5px;
-        }
+    }
+    .route-tags{
+        margin-top:10px;
+        border-top:1px solid #f1f1f1;
     }
 }

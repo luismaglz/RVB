@@ -1,0 +1,19 @@
+:host {
+    display: block;
+    .gym-select-container {
+        padding: 10px;
+        top: 56px;
+        position: fixed;
+        width: 100%;
+        .card-sub-content{
+            margin:10px 0;
+        }
+        .card-content-divider {
+            width: 98%;
+            height: 1px;
+            background-color: lightgrey;
+            display: block;
+            border: 0;
+        }
+    }
+}
